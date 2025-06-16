@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>News - JahnexPro</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* General Body Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #070808; /* Dark background, consistent with trade.html */
+            color: #f7f5f5; /* Light text */
+            line-height: 1.6;
+            padding-bottom: 70px; /* Space for the fixed bottom nav */
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 10px auto;
+            padding: 20px;
+            background-color: #120d0d; /* Dark background for content, consistent with trade.html */
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            text-align: center;
+            min-height: 5px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        h1 {
+            color: #d10404; /* Cyan color for headings */
+            margin-bottom: 25px;
+            font-size: 2em;
+        }
+
+        /* Styling for the news widget container to give it some padding/margin */
+        .news-widget-container {
+            margin-top: 20px;
+            background-color: #16213e; /* Slightly lighter dark blue for the widget background */
+            padding: 15px;
+            border-radius: 8px;
+            overflow: hidden; /* Ensures widget content stays within bounds */
+        }
+
+        /* Bottom Navigation Bar Styles - copied from your existing files for consistency */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #1a1a2e; /* Dark blue, consistent with index.html */
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+        }
+
+        .bottom-nav .nav-item {
+            color:#b0b0b0; /* Light grey text */
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 5px 0;
+            font-size: 14px;
+            transition: color 0.3s ease;
+        }
+
+        .bottom-nav .nav-item:hover {
+            color: #c70505; /* Cyan on hover */
+        }
+
+        .bottom-nav .nav-item i {
+            font-size: 22px;
+            margin-bottom: 5px;
+        }
+
+        .bottom-nav .nav-item.active {
+            color: #c1180c; /* Active item color */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Latest Crypto News</h1>
+
+        <div class="news-widget-container">
+         
+            </div>
+
+        <p style="margin-top: 30px; font-size: 0.9em; color: #aaa;"></p>
+    </div>
+
+    <div class="bottom-nav">
+        <a href="index.html" class="nav-item">
+            <i class="fas fa-chart-line"></i>
+            <span>Market</span>
+        </a>
+        <a href="trade.html" class="nav-item">
+            <i class="fas fa-exchange-alt"></i>
+            <span>Trade</span>
+        </a>
+        <a href="wallet.html" class="nav-item">
+            <i class="fas fa-wallet"></i>
+            <span>Wallet</span>
+        </a>
+         <a href="news.html" class="nav-item active"> <i class="fas fa-newspaper"></i> <span>News</span>
+        </a>
+        <a href="profile.html" class="nav-item">
+            <i class="fas fa-user"></i>
+            <span>Profile</span>
+        </a>
+    </div>
+    <rssapp-wall id="t453IYMxQOYCzCAF"></rssapp-wall><script src="https://widget.rss.app/v1/wall.js" type="text/javascript" async></script>
+</body>
+</html>

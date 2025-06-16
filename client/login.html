@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JahnexPro-Login / Signup</title>
+    <style>
+        /* General Body & Container Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #3e3d3d; /* Light grey background */
+            color: #d3cece; /* Dark grey text */
+            display: flex; /* Use flexbox for centering */
+            justify-content: center; /* Center horizontally */
+            align-items: center; /* Center vertically */
+            min-height: 100vh; /* Full viewport height */
+        }
+
+        .auth-container {
+            background-color: #fcfafa; /* White background for the form area */
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px; /* Max width for the form */
+            box-sizing: border-box; /* Include padding in width calculation */
+            text-align: center;
+            position: relative; /* Needed for absolute positioning of back arrow */
+        }
+
+        .auth-container h2 {
+            margin-top: 0;
+            margin-bottom: 25px;
+            color: #282c34;
+            font-size: 26px;
+        }
+
+        /* Form Switch Buttons (Email/Phone) */
+        .form-switch {
+            display: flex;
+            margin-bottom: 25px;
+            border-radius: 5px;
+            overflow: hidden; /* Ensures buttons corners are rounded together */
+        }
+
+        .form-switch button {
+            flex: 1; /* Makes buttons take equal width */
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            background-color: #f9f9f9;
+            cursor: pointer;
+            font-size: 16px;
+            color: #555;
+            transition: all 0.3s ease;
+            white-space: nowrap; /* Prevent text wrapping */
+        }
+
+        .form-switch button:first-child {
+            border-right: none; /* Remove border between buttons */
+        }
+
+        .form-switch button:hover {
+            background-color: #e8e8e8;
+        }
+
+        .form-switch button.active {
+            background-color: #61dafb; /* Active button color */
+            color: #282c34;
+            border-color: #61dafb;
+            font-weight: bold;
+        }
+
+        /* Input Group Styles */
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left; /* Align labels/inputs to the left */
+        }
+
+        .input-group label {
+            display: block; /* Make label take full width */
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #444;
+            font-size: 15px;
+        }
+
+        .input-group input[type="email"],
+        .input-group input[type="tel"],
+        .input-group input[type="password"] {
+            width: 100%; /* Full width */
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box; /* Include padding in width */
+            transition: border-color 0.3s ease;
+        }
+
+        .input-group input[type="email"]:focus,
+        .input-group input[type="tel"]:focus,
+        .input-group input[type="password"]:focus {
+            border-color: #61dafb; /* Highlight on focus */
+            outline: none; /* Remove default outline */
+            box-shadow: 0 0 0 2px rgba(97, 218, 251, 0.2); /* Light glow */
+        }
+
+        /* intl-tel-input specific styles (adjust as needed for integration) */
+        .iti {
+            width: 100%; /* Make the intl-tel-input container full width */
+        }
+        .iti__flag-container {
+            border-top-left-radius: 5px;
+            border-bottom-left-radius: 5px;
+        }
+        .iti__selected-flag {
+             border: 1px solid #ddd; /* Ensure flag button has a border matching input */
+             border-right: none;
+             border-top-left-radius: 5px;
+             border-bottom-left-radius: 5px;
+        }
+        .iti__country-list {
+            border: 1px solid #ddd; /* Style for dropdown list */
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .iti__search-input {
+            width: calc(100% - 20px); /* Adjust search input in dropdown */
+        }
+
+
+        /* Continue Button Styles */
+        form button[type="submit"] {
+            background-color: #61dafb;
+            color: #282c34;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+            width: 100%; /* Full width button */
+            transition: background-color 0.3s ease;
+            margin-top: 15px;
+        }
+
+        form button[type="submit"]:hover {
+            background-color: #4dc5e0; /* Slightly darker cyan on hover */
+        }
+
+        /* Hidden Class - MODIFIED */
+        .hidden {
+            display: none !important; /* Added !important */
+        }
+
+        /* Toggle Text (Login/Signup link) styles */
+        #toggleText {
+            font-size: 14px;
+            color: #666;
+            margin-top: -10px; /* Adjust margin to bring it closer to the input groups */
+            margin-bottom: 20px; /* Space before the submit button */
+        }
+
+        #toggleText a {
+            color: #61dafb; /* Cyan link color */
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.2s ease;
+        }
+
+        #toggleText a:hover {
+            color: #4dc5e0; /* Darker cyan on hover */
+            text-decoration: underline;
+        }
+
+        /* Styles for the new terms agreement group */
+        .terms-agreement {
+            margin-top: 20px;
+            margin-bottom: 20px; /* Add some space below it */
+            text-align: left;
+            display: flex; /* Use flexbox for alignment of checkbox and text */
+            align-items: center; /* Vertically align items */
+            color: #444; /* Adjust text color */
+        }
+
+        .terms-agreement input[type="checkbox"] {
+            margin-right: 10px; /* Space between checkbox and text */
+            transform: scale(1.2); /* Make checkbox slightly larger */
+        }
+
+        .terms-agreement label {
+            display: inline; /* Keep label inline with checkbox */
+            font-weight: normal; /* Normal font weight for the agreement text */
+        }
+
+        .terms-agreement a {
+            color: #61dafb;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .terms-agreement a:hover {
+            text-decoration: underline;
+        }
+
+        /* Back to Login link/arrow styling */
+        .back-to-login {
+            position: absolute;
+            top: 15px;
+            left: 20px;
+            font-size: 1.1em;
+            color: #61dafb;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+
+        .back-to-login:hover {
+            color: #4dc5e0;
+        }
+
+        .back-to-login .arrow {
+            margin-right: 5px;
+        }
+ .auth-message {
+            position: absolute; /* Position relative to .auth-container */
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%); /* Center horizontally and vertically */
+            background-color: rgba(255, 255, 255, 0.7); /* Semi-transparent background */
+            color: rgb(14, 8, 8);
+            padding: 15px 25px;
+            border-radius: 8px;
+    font-size: 14px; /* Changed from 1.2em */
+            font-weight: bold;
+            text-align: center;
+            z-index: 1000; /* Ensure it's on top */
+            min-width: 250px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+            transition: opacity 0.5s ease-in-out;
+            opacity: 0; /* Start hidden with transition */
+            pointer-events: none; /* Allow clicks to pass through when hidden/fading */
+        }
+
+        .auth-message.show {
+            opacity: 1; /* Fade in */
+        }
+
+        .auth-message.success {
+            background-color: rgba(46, 204, 113, 0.85); /* Green for success */
+        }
+
+        .auth-message.error {
+            background-color: rgba(231, 76, 60, 0.85); /* Red for error */
+        }
+.forgot-password {
+             margin-top: 25px;
+            margin-bottom: 20px; /* Add some space below it */
+            text-align: left;
+            display: flex; /* Use flexbox for alignment of checkbox and text */
+            align-items: center; /* Vertically align items */
+            color: #444; /* Space above the button */
+        }
+
+        .forgot-password a {
+            font-size: 14px;
+            color: #61dafb;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .forgot-password a:hover {
+            color: #4dc5e0;
+            text-decoration: underline;
+        }
+
+
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> </head>
+<body>
+    <div class="auth-container">
+        <a href="#" id="backToLoginLink" class="back-to-login hidden">
+            <i class="fas fa-arrow-left arrow"></i> Back to Login
+        </a>
+
+        <h2>Login / Signup</h2>
+
+        <div class="form-switch">
+            <button id="useEmail">Use Email</button>
+            <button id="usePhone">Use Phone</button>
+        </div>
+
+        <form id="authForm">
+            <div id="emailInput" class="input-group hidden">
+                <label for="email">Email:</label>
+                <input type="email" id="email" placeholder="you@example.com" />
+            </div>
+            <div id="phoneInput" class="input-group hidden">
+                <label for="phone">Phone:</label>
+                <input type="tel" id="phone" />
+            </div>
+            <div class="input-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" placeholder="Enter password" required />
+            </div>
+
+            <div id="termsAgreementGroup" class="terms-agreement hidden">
+                <input type="checkbox" id="terms-checkbox" required>
+                <label for="terms-checkbox">I agree to the <a href="terms.html" target="_blank">Terms & Conditions</a></label>
+            </div>
+            
+
+            <p id="toggleText">
+                Already have an account? <a href="#" id="authToggleLink">Login</a>
+            </p>
+
+            <button type="submit">Continue</button>
+        </form>
+         <div id="authMessage" class="auth-message hidden"></div>
+     <div id="forgotPasswordGroup" class="forgot-password">
+                <a href="user_chat.html" id="forgotPasswordLink">Forgot Password?</a>
+            </div>
+        </div>
+    
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
+    <script src="../js/auth.js"></script>
+
+ <script>
+        // Initialize intl-tel-input
+        const phoneInputField = document.querySelector("#phone");
+        const iti = window.intlTelInput(phoneInputField, {
+            utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+        });
+
+        // Get elements
+        const authForm = document.getElementById('authForm');
+        const authMessage = document.getElementById('authMessage');
+        const useEmailButton = document.getElementById('useEmail');
+        const usePhoneButton = document.getElementById('usePhone');
+        const emailInputGroup = document.getElementById('emailInput');
+        const phoneInputGroup = document.getElementById('phoneInput');
+        const toggleText = document.getElementById('toggleText');
+        const authToggleLink = document.getElementById('authToggleLink');
+        const termsAgreementGroup = document.getElementById('termsAgreementGroup');
+        const backToLoginLink = document.getElementById('backToLoginLink');
+        const forgotPasswordGroup = document.getElementById('forgotPasswordGroup');
+        const loginSignupTitle = document.querySelector('.auth-container h2'); // Select the H2 title
+
+        // Initial state: Email form active, Phone and Terms hidden
+        let isLoginMode = true; // Tracks if the form is currently in login mode
+        let useEmail = true; // Tracks if email input is active
+
+        // Function to show/hide message
+        function showMessage(message, type) {
+            authMessage.textContent = message;
+            authMessage.className = `auth-message show ${type}`; // Add show and type classes
+            // Hide message after 3 seconds
+            setTimeout(() => {
+                authMessage.classList.remove('show');
+            }, 3000);
+        }
+
+        // Function to update form for login/signup
+        function updateFormMode() {
+            if (isLoginMode) {
+                // Show login elements
+                loginSignupTitle.textContent = 'Login';
+                authToggleLink.textContent = 'Signup';
+                toggleText.innerHTML = `Don't have an account? <a href="#" id="authToggleLink">Signup</a>`;
+                forgotPasswordGroup.classList.remove('hidden');
+                termsAgreementGroup.classList.add('hidden');
+                backToLoginLink.classList.add('hidden'); // Hide back button in login
+                // Re-attach toggle link listener (important after innerHTML change)
+                document.getElementById('authToggleLink').addEventListener('click', function(e) {
+                    e.preventDefault();
+                    isLoginMode = !isLoginMode;
+                    updateFormMode();
+                });
+            } else {
+                // Show signup elements
+                loginSignupTitle.textContent = 'Signup';
+                authToggleLink.textContent = 'Login';
+                toggleText.innerHTML = `Already have an account? <a href="#" id="authToggleLink">Login</a>`;
+                forgotPasswordGroup.classList.add('hidden');
+                termsAgreementGroup.classList.remove('hidden');
+                backToLoginLink.classList.add('hidden'); // Ensure hidden by default for signup form
+                // Re-attach toggle link listener
+                document.getElementById('authToggleLink').addEventListener('click', function(e) {
+                    e.preventDefault();
+                    isLoginMode = !isLoginMode;
+                    updateFormMode();
+                });
+            }
+            // Update input visibility based on current toggle (email/phone)
+            if (useEmail) {
+                emailInputGroup.classList.remove('hidden');
+                phoneInputGroup.classList.add('hidden');
+            } else {
+                phoneInputGroup.classList.remove('hidden');
+                emailInputGroup.classList.add('hidden');
+            }
+        }
+
+
+        // Event Listeners for form switch
+        useEmailButton.addEventListener('click', function() {
+            useEmail = true;
+            useEmailButton.classList.add('active');
+            usePhoneButton.classList.remove('active');
+            emailInputGroup.classList.remove('hidden');
+            phoneInputGroup.classList.add('hidden');
+        });
+
+        usePhoneButton.addEventListener('click', function() {
+            useEmail = false;
+            usePhoneButton.classList.add('active');
+            useEmailButton.classList.remove('active');
+            phoneInputGroup.classList.remove('hidden');
+            emailInputGroup.classList.add('hidden');
+        });
+
+
+        // Event Listener for the main form submission
+        authForm.addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent default form submission
+
+            const email = document.getElementById('email').value;
+            const phone = iti.getNumber(); // Gets the full international phone number
+            const password = document.getElementById('password').value;
+            const termsChecked = document.getElementById('terms-checkbox') ? document.getElementById('terms-checkbox').checked : true; // For login, terms are not required
+
+            // Basic validation
+            if (!isLoginMode && !termsChecked) { // Only check terms for signup mode
+                showMessage('Please agree to the Terms & Conditions.', 'error');
+                return;
+            }
+
+            if (password.length < 6) {
+                showMessage('Password must be at least 6 characters.', 'error');
+                return;
+            }
+
+            // In a real application, you'd send this data to a server for authentication/registration.
+            // This is a simulation.
+            
+            showMessage(isLoginMode ? 'Logging in...' : 'Signing up...', 'info');
+
+            setTimeout(() => {
+                // Simulate a successful login/signup
+                showMessage(isLoginMode ? 'Login successful! Redirecting...' : 'Signup successful! Redirecting...', 'success');
+                
+                // *** CRITICAL LINE: SET isLoggedIn TO TRUE ***
+                localStorage.setItem('isLoggedIn', 'true'); 
+                console.log('localStorage.isLoggedIn set to:', localStorage.getItem('isLoggedIn')); // Debugging log
+
+                // Redirect after a short delay to allow message to be seen
+                setTimeout(() => {
+                    window.location.href = 'index.html'; // Redirect to the market page
+                }, 1000); // Wait 1 second before redirecting
+                
+            }, 1500); // Simulate network request delay (1.5 seconds)
+        });
+
+        // Initialize form state on page load
+        updateFormMode();
+        useEmailButton.click(); // Start with email input active
+        
+        
+
+        backToLoginLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            // Restore form state
+            document.querySelector('.auth-container h2').classList.remove('hidden');
+            document.querySelector('.form-switch').classList.remove('hidden');
+            authForm.classList.remove('hidden');
+            toggleText.classList.remove('hidden');
+            forgotPasswordGroup.classList.remove('hidden');
+            backToLoginLink.classList.add('hidden'); // Hide back button
+            showMessage('', ''); // Clear message
+            updateFormMode(); // Reset form to login or signup based on isLoginMode
+        });
+
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="shortcut icon" href="/favicon.ico" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+<link rel="manifest" href="/site.webmanifest" />    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JahnexPro- Market</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+   <style>
+        /* General Body Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #1a1a2e; /* Dark blue background */
+            color: #e0e0e0; /* Light grey text */
+            line-height: 1.6;
+            padding-bottom: 70px; /* IMPORTANT: Space for the fixed bottom nav */
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #16213e; /* Slightly lighter dark blue for content */
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Header Styles */
+        header {
+            background-color: #0f0f10; /* Even darker blue for header */
+            color: white;
+            padding: 15px 0;
+            text-align: center;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 5%; /* Padding on sides */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 28px;
+            color: #e94560; /* Reddish accent color */
+            flex-grow: 1; /* Allow h1 to take available space */
+            text-align: center; /* Center the heading */
+        }
+
+        header button {
+            background-color: #e94560; /* Reddish accent for buttons */
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        header button:hover {
+            background-color: #e03250; /* Slightly darker red on hover */
+        }
+.login-btn {
+            background-color: #0acaf0;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 0.9em;
+            transition: background-color 0.3s ease;
+        }
+
+        .login-btn:hover {
+            background-color: #0acaf0;
+        }
+        /* Main Content Styles */
+        #search {
+            width: calc(100% - 24px); /* Account for padding and border */
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #3e4c70; /* Darker border */
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box; /* Include padding in width */
+            background-color: #2e3b5e; /* Darker background for search input */
+            color: #e0e0e0;
+        }
+
+        /* The original #market-list was a div. Now it's a wrapper for the table. */
+        /* The .card style is applied to the wrapper to maintain its appearance. */
+        .market-table-wrapper {
+            background-color: #16213e; /* Match container background */
+            padding: 0; /* Remove padding here, as table cells will have it */
+            margin-bottom: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            overflow-x: auto; /* Enable horizontal scrolling for small screens */
+        }
+
+        /* Basic Table Styling for market data */
+        #market-list { /* This is now the table itself */
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 0; /* Remove top margin as it's inside the wrapper */
+            border-radius: 8px; /* Apply border-radius to the table itself */
+            overflow: hidden; /* Ensures border-radius applies to content */
+        }
+
+        #market-list th, #market-list td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #3e4c70; /* Darker border for rows */
+            white-space: nowrap; /* Prevent text wrapping in cells */
+        }
+
+        #market-list th {
+            background-color: #0f3460; /* Match header background */
+            font-weight: bold;
+            color: #e0e0e0; /* Light text for headers */
+            position: sticky; /* Make headers sticky for horizontal scroll */
+            top: 0;
+            z-index: 1; /* Ensure headers are above scrolling content */
+        }
+
+        #market-list tbody tr:hover {
+            background-color: #2e3b5e; /* Darker hover state */
+            cursor: pointer;
+        }
+
+        /* Price change indicators */
+        .price-up {
+            color: #28a745; /* Green - still good for dark theme */
+            font-weight: bold;
+        }
+
+        .price-down {
+            color: #dc3545; /* Red - still good for dark theme */
+            font-weight: bold;
+        }
+
+        /* Coin Info in Table Cell */
+        .coin-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .coin-logo {
+            width: 24px; /* Smaller logo for table */
+            height: 24px;
+            margin-right: 8px;
+            border-radius: 50%; /* Keep logos round */
+        }
+
+        .coin-symbol {
+            color: #b0b0b0; /* Lighter grey for symbol */
+            font-size: 0.9em;
+            margin-left: 5px;
+        }
+
+        /* Sparkline Chart Container */
+        .chart-container {
+            width: 80px; /* Fixed width for sparkline column */
+            height: 30px; /* Fixed height for sparkline */
+            display: flex; /* Use flex to center SVG if needed */
+            align-items: center;
+            justify-content: center;
+        }
+
+        .chart-container svg {
+            display: block; /* Remove extra space below SVG */
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Pagination Controls */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+            gap: 15px;
+        }
+
+        .pagination button {
+            background-color: #e94560; /* Reddish accent for buttons */
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.2s ease;
+        }
+
+        .pagination button:hover {
+            background-color: #e03250;
+        }
+
+        .pagination button:disabled {
+            background-color: #4a4a4a; /* Darker disabled color */
+            color: #888;
+            cursor: not-allowed;
+        }
+
+        .pagination span {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #e0e0e0; /* Light text */
+        }
+
+        /* ************************************** */
+        /* New Bottom Navigation Styles           */
+        /* ************************************** */
+        .bottom-nav {
+            display: flex;
+            justify-content: space-around; /* Distributes items evenly */
+            align-items: center;
+            position: fixed; /* Fixes it to the viewport */
+            bottom: 0; /* Aligns to the bottom */
+            width: 100%;
+            background-color: #19222e; /* Dark blue background for the nav bar */
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.3); /* Darker shadow at the top */
+            padding: 10px 0;
+            z-index: 1000; /* Ensures it stays on top of other content */
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column; /* Stack icon and text vertically */
+            align-items: center; /* Center items horizontally within their space */
+            text-decoration: none; /* Remove underline from links */
+            color: #b0b0b0; /* Default lighter grey color */
+            font-size: 12px; /* Smaller font for text */
+            font-weight: bold;
+            padding: 5px 0; /* Padding around each item */
+            transition: color 0.2s ease; /* Smooth transition for hover/active */
+            flex: 1; /* Make each item take equal width */
+        }
+
+        .nav-item i {
+            font-size: 22px; /* Icon size */
+            margin-bottom: 3px; /* Space between icon and text */
+        }
+
+        /* Active/Current Page state */
+        .nav-item.active {
+            color: #e94560; /* Reddish accent color for active item */
+        }
+
+        /* Hover state */
+        .nav-item:hover {
+            color: #e94560; /* Reddish accent on hover */
+        }
+
+        /* Responsive adjustments for table */
+        @media (max-width: 768px) {
+            #market-list th, #market-list td {
+                padding: 8px 10px; /* Reduce padding on smaller screens */
+                font-size: 0.9em;
+            }
+            .coin-logo {
+                width: 20px;
+                height: 20px;
+            }
+            .chart-container {
+                width: 60px; /* Smaller chart on mobile */
+                height: 25px;
+            }
+            .pagination {
+                flex-wrap: wrap; /* Allow pagination items to wrap */
+                justify-content: center;
+                gap: 10px;
+            }
+            .pagination button {
+                padding: 8px 15px;
+                font-size: 0.9em;
+            }
+            .pagination span {
+                font-size: 1em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 10px;
+            }
+            header h1 {
+                font-size: 24px;
+            }
+            header button {
+                padding: 8px 15px;
+                font-size: 14px;
+            }
+            #search {
+                padding: 10px;
+                font-size: 14px;
+            }
+            /* Table might need to scroll horizontally on very small screens */
+            .market-table-wrapper {
+                border-radius: 5px;
+            }
+            #market-list th, #market-list td {
+                font-size: 0.8em;
+            }
+        }
+    </style>
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+</head>
+<body>
+    <header>
+        <h1>Crypto Exchange</h1>
+        <a href="login.html" class="login-btn" id="loginSignupButton">Login / Signup</a>
+    </header>
+<!-- TradingView Widget BEGIN -->
+<div class="tradingview-widget-container">
+  <div class="tradingview-widget-container__widget"></div>
+  <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js" async>
+  {
+    "colorTheme": "dark",
+    "dateRange": "1D",
+    "showChart": true,
+    "locale": "en",
+    "width": "100%",
+    "height": "600",
+    "showSymbolLogo": true,
+    "isTransparent": false,
+    "plotLineColorGrowing": "rgba(0, 255, 0, 1)",
+    "plotLineColorFalling": "rgba(255, 0, 0, 1)",
+    "belowLineFillColorGrowing": "rgba(0, 255, 0, 0.05)",
+    "belowLineFillColorFalling": "rgba(255, 0, 0, 0.05)",
+    "gridLineColor": "rgba(240, 243, 250, 0)",
+    "scaleFontColor": "rgba(106, 109, 120, 1)",
+    "symbolActiveColor": "rgba(33, 150, 243, 0.12)",
+    "tabs": [
+      {
+        "title": "Crypto",
+        "symbols": [
+          { "s": "BINANCE:BTCUSDT", "d": "Bitcoin" },
+          { "s": "BINANCE:ETHUSDT", "d": "Ethereum" },
+          { "s": "BINANCE:LTCUSDT", "d": "Litecoin" },
+          { "s": "BINANCE:BNBUSDT", "d": "Binance Coin" },
+          { "s": "BINANCE:TRXUSDT", "d": "Tron" },
+          { "s": "BINANCE:DOGEUSDT", "d": "Dogecoin" },
+          { "s": "BINANCE:BCHUSDT", "d": "Bitcoin Cash" },
+          { "s": "BINANCE:APTUSDT", "d": "Aptos" },
+          { "s": "BINANCE:OPUSDT", "d": "Optimism" },
+          { "s": "BINANCE:LDOUSDT", "d": "Lido DAO" },
+          { "s": "BINANCE:ADAUSDT", "d": "Cardano" },
+          { "s": "BINANCE:DOTUSDT", "d": "Polkadot" },
+          { "s": "BINANCE:ATOMUSDT", "d": "Cosmos" },
+          { "s": "BINANCE:LINKUSDT", "d": "Chainlink" },
+          { "s": "BINANCE:IMXUSDT", "d": "Immutable X" },
+          { "s": "BINANCE:FILUSDT", "d": "Filecoin" },
+          { "s": "BINANCE:MANAUSDT", "d": "Decentraland" },
+          { "s": "BINANCE:XRPUSDT", "d": "XRP" },
+          { "s": "BINANCE:XLMUSDT", "d": "Stellar" },
+          { "s": "BINANCE:VETUSDT", "d": "VeChain" },
+          { "s": "BINANCE:UNIUSDT", "d": "Uniswap" },
+          { "s": "BINANCE:SOLUSDT", "d": "Solana" },
+          { "s": "BINANCE:SHIBUSDT", "d": "Shiba Inu" },
+          { "s": "BINANCE:SANDUSDT", "d": "The Sandbox" },
+          { "s": "BINANCE:NEARUSDT", "d": "NEAR" },
+          { "s": "BINANCE:AAVEUSDT", "d": "Aave" },
+          { "s": "BINANCE:LUNAUSDT", "d": "Terra Luna" },
+          { "s": "BINANCE:GRTUSDT", "d": "The Graph" },
+          { "s": "BINANCE:ENSUSDT", "d": "ENS" },
+          { "s": "BINANCE:DYDXUSDT", "d": "dYdX" },
+          { "s": "BINANCE:AXSUSDT", "d": "Axie Infinity" },
+          { "s": "BINANCE:AVAXUSDT", "d": "Avalanche" },
+          { "s": "BINANCE:MAGICUSDT", "d": "MAGNUM" },
+           { "s": "BINANCE:PEPEUSDT", "d": "Pepe" },
+    { "s": "BINANCE:FLOKIUSDT", "d": "Floki" },
+    { "s": "BINANCE:BONKUSDT", "d": "Bonk" },
+    { "s": "BINANCE:SEIUSDT", "d": "Sei" },
+    { "s": "BINANCE:INJUSDT", "d": "Injective" },
+    { "s": "BINANCE:RUNEUSDT", "d": "THORChain" },
+    { "s": "BINANCE:ARBUSDT", "d": "Arbitrum" },
+    { "s": "BINANCE:STXUSDT", "d": "Stacks" },
+    { "s": "BINANCE:GALAUSDT", "d": "Gala" },
+    { "s": "BINANCE:JASMYUSDT", "d": "JasmyCoin" },
+    { "s": "BINANCE:CFXUSDT", "d": "Conflux" },
+    { "s": "BINANCE:SUIUSDT", "d": "SUI" },
+    { "s": "BINANCE:RSRUSDT", "d": "Reserve Rights" },
+    { "s": "BINANCE:XECUSDT", "d": "eCash" },
+    { "s": "BINANCE:1000SATSUSDT", "d": "1000SATS" },
+{ "s": "BINANCE:TIAUSDT", "d": "Celestia" },
+{ "s": "BINANCE:PYTHUSDT", "d": "Pyth Network" },
+{ "s": "BINANCE:WLDUSDT", "d": "Worldcoin" },
+{ "s": "BINANCE:ORDIUSDT", "d": "ORDI" },
+{ "s": "BINANCE:TIAUSDT", "d": "Celestia" },
+{ "s": "BINANCE:JOEUSDT", "d": "Trader Joe" }
+    
+          
+
+
+        ]
+      },
+      {
+        "title": "Gold",
+        "symbols": [
+          { "s": "TVC:GOLD", "d": "Gold" },
+          { "s": "TVC:SILVER", "d": "Silver" },
+          { "s": "TVC:PLATINUM", "d": "Platinum Spot" },
+
+{ "s": "TVC:PALLADIUM", "d": "Palladium Spot" },
+{ "s": "TVC:USOIL", "d": "Crude Oil Spot" },
+{ "s": "TVC:UKOIL", "d": "Brent Crude Spot" }
+        ]
+      },
+      {
+        "title": "Forex",
+        "symbols": [
+          { "s": "FX:EURUSD", "d": "EUR/USD" },
+          { "s": "FX:USDJPY", "d": "USD/JPY" },
+          { "s": "FX:GBPUSD", "d": "GBP/USD" },
+          { "s": "FX:USDCAD", "d": "USD/CAD" },
+          { "s": "FX:AUDUSD", "d": "AUD/USD" },
+          { "s": "FX:USDCHF", "d": "USD/CHF" }
+        ]
+      }
+    ]
+  }
+  </script>
+</div>
+<!-- TradingView Widget END -->
+  
+
+    
+    <div class="bottom-nav">
+        <a href="index.html" class="nav-item active">
+            <i class="fas fa-chart-line"></i>
+            <span>Market</span>
+        </a>
+        <a href="trade.html" class="nav-item">
+            <i class="fas fa-exchange-alt"></i>
+            <span>Trade</span>
+        </a>
+        <a href="wallet.html" class="nav-item">
+            <i class="fas fa-wallet"></i>
+            <span>Wallet</span>
+        </a>
+         <a href="news.html" class="nav-item">
+            <i class="fas fa-newspaper"></i>
+            <span>News</span>
+        <a href="profile.html" class="nav-item">
+            <i class="fas fa-user"></i>
+            <span>Profile</span>
+        </a>
+    </div>
+
+    <script src="../js/market.js"></script>
+     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginSignupButton = document.getElementById('loginSignupButton');
+            const isLoggedIn = localStorage.getItem('isLoggedIn'); // Check localStorage for login status
+
+            if (isLoggedIn === 'true' && loginSignupButton) {
+                loginSignupButton.style.display = 'none'; // Hide the button
+            }
+        });
+    </script>
+</body>
+</html>

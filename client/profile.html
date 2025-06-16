@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - JahnexPro</title>
+            <script src="js/auth.js"></script> 
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* General Body Styles (copied from index.html for consistency) */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #0c0a0a; /* Light grey background - adjusted to match screenshot */
+            color: #333; /* Dark grey text */
+            line-height: 1.6;
+            padding-bottom: 70px; /* IMPORTANT: Space for the fixed bottom nav */
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #090808; /* White background for content */
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Header Styles (copied from index.html for consistency) */
+        header {
+            background-color: #282c34; /* Dark blue-grey, common for crypto UIs */
+            color: rgb(25, 22, 22);
+            padding: 15px 0;
+            text-align: center;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 5%; /* Padding on sides */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 28px;
+            color: #db2804; /* Cyan accent color */
+            flex-grow: 1; /* Allow h1 to take available space */
+            text-align: center; /* Center the heading within the header */
+        }
+
+        /* Card styles (copied from index.html for consistency) */
+        .card {
+            background-color: #110d0d;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            text-align: left; /* Default text alignment for content inside cards */
+        }
+
+        /* Profile Specific Styles */
+        .card h2, .card h3 {
+            color: #eceef2;
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+
+        .card p {
+            margin-bottom: 10px;
+        }
+
+        .card ul {
+            list-style: none; /* Remove default bullet points */
+            padding: 0;
+            margin: 0;
+        }
+
+        .card ul li {
+            border-bottom: 1px solid #eee;
+        }
+
+        .card ul li:last-child {
+            border-bottom: none; /* No border for the last item */
+        }
+
+        .card ul li a {
+            display: flex; /* Make the anchor fill the list item and use flex for internal alignment */
+            align-items: center; /* Vertically align icon, text, and arrow */
+            justify-content: space-between; /* Space out content and arrow */
+            padding: 12px 0; /* Apply padding to the anchor instead of the li */
+            color: #ede7e7;
+            text-decoration: none; /* Remove underline */
+            font-size: 16px;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+
+        .card ul li a:hover {
+            background-color: #373434; /* Subtle hover effect for the entire clickable area */
+            color: #747576; /* Darker text on hover */
+        }
+
+        .action-item-content {
+            display: flex;
+            align-items: center;
+            flex-grow: 1; /* Allow content to take available space */
+        }
+
+        .action-icon {
+            font-size: 18px; /* Size of the left-aligned icons */
+            color: #e92a0d; /* Cyan color for action icons */
+            margin-right: 15px; /* Space between icon and text */
+            width: 25px; /* Fixed width to align text nicely */
+            text-align: center;
+        }
+
+        .arrow-icon {
+            color: #fe0505; /* Lighter color for arrows */
+            font-size: 14px;
+        }
+
+        .card ul li button {
+            /* Logout button styling based on login background color */
+            background-color: #d32607; /* Cyan from login button */
+            color: #282c34; /* Dark text from login button */
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            width: 100%; /* Make logout button full width */
+            margin-top: 15px; /* Space above logout button */
+            transition: background-color 0.3s ease;
+        }
+
+        .card ul li button:hover {
+            background-color: #4dc5e0; /* Darker cyan on hover */
+        }
+
+        /* ************************************** */
+        /* Bottom Navigation Styles (Copied from Market page) */
+        /* ************************************** */
+        .bottom-nav {
+            display: flex;
+            justify-content: space-around; /* Distributes items evenly */
+            align-items: center;
+            position: fixed; /* Fixes it to the viewport */
+            bottom: 0; /* Aligns to the bottom */
+            width: 100%;
+            background-color: #0e0c0c; /* White background for the nav bar */
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1); /* Shadow at the top */
+            padding: 10px 0;
+            z-index: 1000; /* Ensures it stays on top of other content */
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column; /* Stack icon and text vertically */
+            align-items: center; /* Center items horizontally within their space */
+            text-decoration: none; /* Remove underline from links */
+            color: #999; /* Default grey color */
+            font-size: 12px; /* Smaller font for text */
+            font-weight: bold;
+            padding: 5px 0; /* Padding around each item */
+            transition: color 0.2s ease; /* Smooth transition for hover/active */
+            flex: 1; /* Make each item take equal width */
+        }
+
+        .nav-item i {
+            font-size: 22px; /* Icon size */
+            margin-bottom: 3px; /* Space between icon and text */
+        }
+
+        /* Active/Current Page state */
+        .nav-item.active {
+            color: #da0707; /* Cyan accent color for active item */
+        }
+        .uidd {
+
+color: #61dafb;
+        }
+
+        /* Hover state */
+        .nav-item:hover {
+            color: #e60606; /* Cyan on hover */
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Profile</h1>
+    </header>
+
+    <div class="container">
+        <div class="card">
+            <h2>Username: <span id="username">User123</span></h2>
+            <p class="uidd">UID: <span id="uid">0001</span></p>
+        </div>
+        <div class="card">
+            <h3>Actions</h3>
+            <ul>
+                <li>
+                    <a href="Welfare.html">
+                        <span class="action-item-content">
+                            <i class="fas fa-hands-helping action-icon"></i>Welfare
+                        </span>
+                        <i class="fas fa-chevron-right arrow-icon"></i>
+                    </a>
+                </li>
+                <li>
+                    <a href="personalinfo.html">
+                        <span class="action-item-content">
+                            <i class="fas fa-user action-icon"></i>Personal Information
+                        </span>
+                        <i class="fas fa-chevron-right arrow-icon"></i>
+                    </a>
+                </li>
+                <li>
+                    <a href="level.html">
+                        <span class="action-item-content">
+                            <i class="fas fa-star action-icon"></i>Level
+                        </span>
+                        <i class="fas fa-chevron-right arrow-icon"></i>
+                    </a>
+                </li>
+                
+               
+                <li>
+                    <a href="trade.html#instantSpotTab">
+                        <span class="action-item-content">
+                            <i class="fas fa-rocket action-icon"></i>Fast trade
+                        </span>
+                        <i class="fas fa-chevron-right arrow-icon"></i>
+                    </a>
+                </li>
+                
+                <li>
+                    <a href="user_chat.html">
+                        <span class="action-item-content">
+                            <i class="fas fa-comments action-icon"></i>Live Chat
+                        </span>
+                        <i class="fas fa-chevron-right arrow-icon"></i>
+                    </a>
+                </li>
+                <li>
+                    <a href="wallet.html#history">
+                        <span class="action-item-content">
+                            <i class="fas fa-history action-icon"></i>History
+                        </span>
+                        <i class="fas fa-chevron-right arrow-icon"></i>
+                    </a>
+                </li>
+             
+           
+                <li>
+                    <a href="change-password.html">
+                        <span class="action-item-content">
+                            <i class="fas fa-key action-icon"></i>Change Login/Withdrawal Password
+                        </span>
+                        <i class="fas fa-chevron-right arrow-icon"></i>
+                    </a>
+                </li>
+                
+                <li>
+                    <a href="aboutus.html">
+                        <span class="action-item-content">
+                            <i class="fas fa-info-circle action-icon"></i>About us
+                        </span>
+                        <i class="fas fa-chevron-right arrow-icon"></i>
+                    </a>
+                </li>
+              
+                <li><button onclick="logout()">Log out</button></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="bottom-nav">
+        <a href="index.html" class="nav-item">
+            <i class="fas fa-chart-line"></i>
+            <span>Market</span>
+        </a>
+        <a href="trade.html" class="nav-item">
+            <i class="fas fa-exchange-alt"></i>
+            <span>Trade</span>
+        </a>
+        <a href="wallet.html" class="nav-item">
+            <i class="fas fa-wallet"></i>
+            <span>Wallet</span>
+        </a>
+          <a href="news.html" class="nav-item">
+            <i class="fas fa-newspaper"></i>
+            <span>News</span>
+        <a href="profile.html" class="nav-item active"> <i class="fas fa-user"></i>
+            <span>Profile</span>
+        </a>
+    </div>
+
+    <script src="../js/profile.js"></script>
+</body>
+</html>

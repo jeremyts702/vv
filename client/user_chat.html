@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Chat - Crypto Exchange Support</title>
+    <style>
+         body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+        #userChatContainer {
+            width: 100%;
+            max-width: 400px;
+            min-height: 400px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        #userMessages {
+            flex-grow: 1;
+            overflow-y: auto;
+            border: 1px solid #eee;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            word-wrap: break-word; /* Ensure long words break */
+        }
+        #userMessages p {
+            margin: 5px 0;
+            padding: 8px 12px;
+            border-radius: 15px;
+            max-width: 80%;
+            line-height: 1.4;
+        }
+        .message-from-admin {
+            background-color: #e0f7fa; /* Light blue for admin */
+            text-align: left;
+            margin-right: auto;
+        }
+        .message-from-me {
+            background-color: #d1c4e9; /* Light purple for user */
+            text-align: right;
+            margin-left: auto;
+        }
+        #userMessageInput {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        #sendUserMessage {
+            width: 100%;
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+        #sendUserMessage:hover {
+            background-color: #0056b3;
+        }
+</style>
+</head>
+
+<body>
+
+
+    <div id="userChatContainer">
+        <h2 style="text-align: center; color: #333; margin-bottom: 20px;">Live Chat Support</h2>
+        <div id="userMessages">
+            </div>
+        <input type="text" id="userMessageInput" placeholder="Type your message..." autofocus>
+        <button id="sendUserMessage">Send to Admin</button>
+    </div>
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+    <script>
+const token = localStorage.getItem('token'); 
+
+// Pass the token in the query object when establishing the socket connection
+const socket = io("http://localhost:5000", { 
+    query: { token: token } 
+});        const userMessagesDiv = document.getElementById('userMessages');
+        const userMessageInput = document.getElementById('userMessageInput');
+        const sendUserMessageBtn = document.getElementById('sendUserMessage');
+
+        // IMPORTANT: Replace with actual user ID from your authentication system or a unique session ID
+        // For demonstration, using a static ID. In a real app, this would come from a logged-in user's data.
+        // It's crucial for the userId to be consistent across sessions for the same user if you implement history
+        const currentUserId = localStorage.getItem('chatUserId') || "GUEST_USER_" + Math.random().toString(36).substr(2, 9);
+        localStorage.setItem('chatUserId', currentUserId); // Persist for demo purposes
+        console.log(`[User Chat JS] Current User ID: ${currentUserId}`); // Debug log
+
+        socket.on('connect', () => {
+            console.log('[User Chat JS] Connected to chat server as user.');
+            socket.emit('user_connected', currentUserId); // Let the server know this is a user
+            // Display a connection message
+            const connectMessage = document.createElement('p');
+            connectMessage.style.color = '#555';
+            connectMessage.style.textAlign = 'center';
+            connectMessage.textContent = 'Connected to support. Waiting for an admin.';
+            userMessagesDiv.appendChild(connectMessage);
+            userMessagesDiv.scrollTop = userMessagesDiv.scrollHeight;
+        });
+
+        socket.on('new_user_message', (data) => {
+            // This event name 'new_user_message' implies a message *to* the user (from admin)
+            const messageElement = document.createElement('p');
+            messageElement.classList.add('message-from-admin');
+            messageElement.textContent = `Admin: ${data.message}`;
+            userMessagesDiv.appendChild(messageElement);
+            userMessagesDiv.scrollTop = userMessagesDiv.scrollHeight;
+        });
+
+        socket.on('chat_error', (message) => {
+            const errorElement = document.createElement('p');
+            errorElement.style.color = 'red';
+            errorElement.textContent = `Error: ${message}`;
+            userMessagesDiv.appendChild(errorElement);
+            userMessagesDiv.scrollTop = userMessagesDiv.scrollHeight;
+            console.error('[User Chat JS] Chat error:', message); // Debug log
+        });
+
+        sendUserMessageBtn.addEventListener('click', () => {
+            const message = userMessageInput.value.trim();
+            if (message) {
+                // Emit 'user_chat_message' to send a message from user to admin
+                socket.emit('user_chat_message', { message: message, userId: currentUserId });
+
+                const messageElement = document.createElement('p');
+                messageElement.classList.add('message-from-me');
+                messageElement.textContent = `You: ${message}`;
+                userMessagesDiv.appendChild(messageElement);
+                userMessagesDiv.scrollTop = userMessagesDiv.scrollHeight;
+                userMessageInput.value = '';
+            }
+        });
+
+        userMessageInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendUserMessageBtn.click();
+            }
+        });
+
+        socket.on('disconnect', () => {
+            console.log('[User Chat JS] Disconnected from chat server as user.');
+            const disconnectMessage = document.createElement('p');
+            disconnectMessage.style.color = '#888';
+            disconnectMessage.style.textAlign = 'center';
+            disconnectMessage.textContent = 'You have been disconnected. Please refresh to reconnect.';
+            userMessagesDiv.appendChild(disconnectMessage);
+            userMessagesDiv.scrollTop = userMessagesDiv.scrollHeight;
+        });
+    </script>
+</body>
+</html>

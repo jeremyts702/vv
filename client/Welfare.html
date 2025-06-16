@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welfare Center</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #090a0b; /* Light grey background for the whole page */
+            color: #a33434;
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh; /* Ensure body takes full viewport height */
+        }
+
+        .welfare-header {
+            background-color: #1a1813; /* Light yellow background as per image */
+            padding: 20px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative; /* Needed for positioning the gift box image */
+            overflow: hidden; /* Hide overflow of the gift box image */
+            height: 120px; /* Adjust height as needed */
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .welfare-header .back-arrow {
+            font-size: 24px;
+            color: #ab3e3e;
+            margin-right: 15px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            position: absolute; /* Position arrow */
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .welfare-header-content {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            margin-left: 50px; /* Space for the back arrow */
+            flex-grow: 1; /* Allow content to take space */
+            text-align: left;
+        }
+
+        .welfare-header h1 {
+            margin: 0;
+            font-size: 24px;
+            color: #ce1212;
+            font-weight: bold;
+        }
+
+        .welfare-header p {
+            margin: 5px 0 0;
+            font-size: 14px;
+            color: #e4dfdf;
+        }
+
+        .welfare-gift-box {
+            /* This is a placeholder. You would replace this with an actual <img> tag
+               pointing to your gift box image, and style it for positioning. */
+            width: 120px; /* Adjust size as needed */
+            height: 100px; /* Adjust size as needed */
+            background-color: transparent; /* No background color needed if using an image */
+            background-image: url('your-gift-box-image.png'); /* Replace with your image path */
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            position: absolute; /* Position relative to .welfare-header */
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1; /* Ensure it's above other elements if necessary */
+        }
+        /* If you have the image file, you would use this instead of background-image for .welfare-gift-box: */
+        /*
+        .welfare-gift-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        */
+
+        .main-content {
+            background-color: #fff; /* White background for the main content area */
+            flex-grow: 1; /* Allows content to take remaining height */
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Center items horizontally */
+            justify-content: center; /* Center items vertically */
+            text-align: center;
+            height: calc(100vh - 120px); /* Adjust based on header height, minus padding */
+        }
+
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-size: 16px;
+            margin-top: -50px; /* Pull it slightly up for visual centering */
+        }
+
+        .empty-state .icon-container {
+            width: 80px;
+            height: 80px;
+            background-color: #e0e0e0; /* Faded gray for the envelope background */
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            margin-bottom: 10px;
+        }
+
+        .empty-state .icon-container i {
+            font-size: 40px;
+            color: #a0a0a0; /* Darker gray for the envelope icon */
+        }
+
+        .empty-state .exclamation-badge {
+            position: absolute;
+            top: -8px; /* Adjust position */
+            right: -8px; /* Adjust position */
+            background-color: #ffcc00; /* Yellow for exclamation badge */
+            color: #333;
+            font-size: 14px;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            border: 2px solid #fff; /* White border as seen in image */
+        }
+
+        .empty-state p {
+            margin: 0;
+            color: #777; /* Muted gray for "Nothing at all" text */
+        }
+    </style>
+</head>
+<body>
+    <div class="welfare-header">
+        <a href="profile.html" class="back-arrow"><i class="fas fa-chevron-left"></i></a>
+        <div class="welfare-header-content">
+            <h1>Welfare Center</h1>
+            <p>Complete tasks to get rich rewards</p>
+        </div>
+        <div class="welfare-gift-box">
+            </div>
+    </div>
+
+    <div class="main-content">
+        <div class="empty-state">
+            <div class="icon-container">
+                <i class="fas fa-folder-open"></i> <span class="exclamation-badge">!</span>
+            </div>
+            <p>Nothing at all</p>
+        </div>
+    </div>
+
+    </body>
+</html>

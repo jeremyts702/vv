@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trade - JahnexPro</title>
+    <script src="js/auth.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* General Body Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #070808; /* Dark background */
+            color: #f7f5f5; /* Light text */
+            line-height: 1.6;
+            padding-bottom: 70px; /* Space for the fixed bottom nav */
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #070101; /* Dark background */
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            text-align: center;
+            min-height: 500px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: #282c34; /* Dark blue-grey */
+            color: #e94560;
+            padding: 15px 0;
+            text-align: center;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 5%;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 28px;
+            color: #e94560; /* Accent color */
+            flex-grow: 1;
+            text-align: center;
+        }
+
+        header button {
+            background-color: #e94560;
+            color: #282c34;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        header button:hover {
+            background-color: #e03250; /* Slightly darker red on hover */
+        }
+
+        /* NEW: Trade Mode Selector/Tabs */
+        .trade-mode-selector {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+
+        .trade-tab {
+            background-color: #1a2029; /* Darker tab background */
+            color: #f7f5f5;
+            border: 1px solid #323b44;
+            padding: 12px 25px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            flex-grow: 1; /* Make tabs expand equally */
+            text-align: center;
+        }
+
+        .trade-tab:first-child {
+            border-top-left-radius: 8px;
+            border-bottom-left-radius: 8px;
+        }
+
+        .trade-tab:last-child {
+            border-top-right-radius: 8px;
+            border-bottom-right-radius: 8px;
+        }
+
+        .trade-tab.active {
+            background-color: #e94560; /* Accent color for active tab */
+            color: #fff;
+            border-color: #e94560;
+        }
+
+        .trade-tab:hover:not(.active) {
+            background-color: #323b44; /* Darker hover for inactive tabs */
+        }
+
+        /* General Trade Card Styling (applies to both sections) */
+        .trade-card {
+            background-color: #010101; /* Dark background */
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            flex: 1; /* Allow card to take available space */
+            box-sizing: border-box;
+            min-width: 300px;
+            margin-top: 0; /* No top margin needed here as it's within a view */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .trade-card h2 {
+            color: #d6d4d4;
+            margin-bottom: 15px;
+            font-size: 24px;
+        }
+
+        .trade-card label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            text-align: left;
+            width: 100%;
+        }
+
+        .trade-card select,
+        .trade-card input[type="number"] {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-bottom: 0;
+            border: 1px solid #e4e4e4;
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box;
+            background-color: #2e3b5e; /* Darker input background */
+            color: #f7f5f5; /* Light text for input */
+        }
+
+        .trade-card input[type="number"]::placeholder {
+            color: #a0a0a0;
+        }
+
+        /* Calculation display */
+        .calculation-display {
+            width: 100%;
+            text-align: left;
+            font-size: 1em;
+            color: #b0b0b0;
+            margin-top: -10px;
+            margin-bottom: 5px;
+        }
+        .calculation-display span {
+            font-weight: bold;
+            color: #09b9ef;
+        }
+
+        /* Buy/Sell Buttons */
+        .trade-buttons {
+            display: flex;
+            gap: 15px;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .trade-buttons button {
+            flex: 1;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+            border: none;
+        }
+
+        .trade-buttons button#buy-button {
+            background-color: #28a745; /* Green for Buy */
+        
+            color: #fff;
+        }
+
+        .trade-buttons button#buy-button:hover {
+            background-color: #218838;
+        }
+
+        .trade-buttons button#sell-button {
+            background-color: #dc3545; /* Red for Sell */
+            color: #fff;
+        }
+
+        .trade-buttons button#sell-button:hover {
+            background-color: #c82333;
+        }
+        
+        /* Instant Trade button (single button) */
+        .trade-buttons button#instant-trade-button {
+            background-color: #09b9ef; /* Cyan for Instant Trade */
+            color: #fff;
+        }
+
+        .trade-buttons button#instant-trade-button:hover {
+            background-color: #079ad0;
+        }
+
+        .trade-buttons button:disabled {
+            background-color: #4a4a4a;
+            color: #888;
+            cursor: not-allowed;
+        }
+
+        .current-price-info {
+            background-color: #323b44;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 0;
+            font-size: 1.1em;
+            text-align: left;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .current-price-info span {
+            font-weight: bold;
+            color: #09b9ef;
+        }
+
+        /* TradingView Chart Container */
+        #tradingview-chart-container {
+            width: 100%;
+            height: 400px;
+            background-color: #1a2029;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .tradingview-widget-container__widget {
+            flex-grow: 1;
+        }
+
+        /* NEW: Hidden class for trade views */
+        .trade-view.hidden {
+            display: none;
+        }
+
+        /* --- Converter Specific Styles (for Instant Spot tab) --- */
+        .conversion-card {
+            background-color: #010101; /* Dark background consistent with trade-card */
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+            color: #f7f5f5; /* Light text */
+            position: relative; /* For loading overlay */
+        }
+
+        .conversion-card h2 {
+            color: #d6d4d4; /* Consistent with other h2 */
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-size: 24px; /* Consistent with other h2 */
+        }
+
+        .available-balance {
+            text-align: right;
+            font-size: 14px;
+            color: #ffcc00; /* Yellow color */
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .input-group {
+            display: flex;
+            align-items: center;
+            border: 1px solid #323b44; /* Darker border for consistency */
+            border-radius: 5px;
+            background-color: #2e3b5e; /* Darker background for inputs */
+            margin-bottom: 15px;
+            height: 50px;
+        }
+
+        .input-group input[type="number"] {
+            flex-grow: 1;
+            padding: 12px;
+            border: none;
+            background-color: transparent;
+            font-size: 16px;
+            color: #f7f5f5; /* Light text */
+            outline: none;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .input-group input[type="number"]::placeholder {
+            color: #a0a0a0;
+        }
+
+        .currency-display {
+            display: flex;
+            align-items: center;
+            padding: 0 10px;
+            border-left: 1px solid #323b44; /* Darker border */
+            height: 100%;
+            box-sizing: border-box;
+            background-color: #1a2029; /* Darker background for currency display */
+        }
+
+        .currency-display img {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            margin-right: 5px;
+            object-fit: contain; /* Ensure logo fits */
+        }
+
+        .currency-display span {
+            font-weight: bold;
+            color: #f7f5f5; /* Light text */
+            margin-right: 5px;
+        }
+
+        .currency-dropdown {
+            border: none;
+            background-color: transparent;
+            font-size: 16px;
+            color: #f7f5f5; /* Light text */
+            cursor: pointer;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            padding-right: 25px;
+            background-image: url('data:image/svg+xml;utf8,<svg fill="%23f7f5f5" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>'); /* Custom arrow, white color */
+            background-repeat: no-repeat;
+            background-position: right 5px center;
+            background-size: 16px;
+        }
+        /* Ensure dropdown options are visible on dark background */
+        .currency-dropdown option {
+            background-color: #2e3b5e; /* Darker background for options */
+            color: #f7f5f5; /* Light text for options */
+        }
+
+        .swap-icon-container {
+            text-align: center;
+            margin: 10px 0;
+        }
+
+        .swap-icon {
+            font-size: 24px;
+            color: #ffcc00; /* Yellow color */
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 50%;
+            transition: transform 0.2s ease;
+        }
+
+        .swap-icon:hover {
+            transform: rotate(180deg);
+        }
+
+        .trade-rate-info {
+            background-color: #323b44; /* Darker background */
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 14px;
+            color: #b0b0b0; /* Lighter grey */
+            text-align: left;
+            margin-top: 15px;
+        }
+        .trade-rate-info span {
+            font-weight: bold;
+            color: #ffcc00; /* Yellow color for the rate value */
+        }
+
+        .trade-button-converter { /* Renamed to avoid conflict with existing trade-button */
+            width: 100%;
+            padding: 15px;
+            background-color: #ffcc00; /* Yellow button */
+            color: #333;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .trade-button-converter:hover {
+            background-color: #e0b800; /* Darker yellow on hover */
+        }
+
+        .balance-section {
+            background-color: #010101; /* Dark background */
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-top: 20px; /* Space between converter and balance */
+            color: #f7f5f5; /* Light text */
+        }
+
+        .balance-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .balance-header h3 {
+            margin: 0;
+            font-size: 18px;
+            color: #d6d4d4; /* Light grey for heading */
+        }
+
+        .balance-header i {
+            font-size: 20px;
+            color: #616161; /* Darker grey icon */
+            cursor: pointer;
+        }
+
+        .balance-info {
+            font-size: 14px;
+            color: #b0b0b0; /* Lighter grey */
+            margin-bottom: 20px;
+        }
+
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-size: 16px;
+            padding: 30px 0;
+        }
+
+        .empty-state .icon-container {
+            width: 80px;
+            height: 80px;
+            background-color: #323b44; /* Darker background for the envelope background */
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            margin-bottom: 10px;
+        }
+
+        .empty-state .icon-container i {
+            font-size: 40px;
+            color: #616161; /* Lighter gray for the envelope icon */
+        }
+
+        .empty-state .exclamation-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: #ffcc00; /* Yellow for exclamation badge */
+            color: #333;
+            font-size: 14px;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            border: 2px solid #010101; /* Match background for border */
+        }
+
+        .empty-state p {
+            margin: 0;
+            color: #b0b0b0; /* Lighter grey */
+        }
+
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #ffcc00;
+            font-size: 20px;
+            z-index: 1000;
+            border-radius: 8px;
+        }
+        .loading-overlay .fa-spinner {
+            margin-right: 10px;
+        }
+
+
+        /* Bottom Navigation (consistent across pages) */
+        .bottom-nav {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: #0a0202;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.3);
+            padding: 10px 0;
+            z-index: 1000;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #616161;
+            font-size: 12px;
+            font-weight: bold;
+            padding: 5px 0;
+            transition: color 0.2s ease;
+            flex: 1;
+        }
+
+        .nav-item i {
+            font-size: 22px;
+            margin-bottom: 3px;
+        }
+
+        .nav-item.active {
+            color: #e94560;
+        }
+
+        .nav-item:hover {
+            color: #e94560;
+        }
+
+        .auth-message {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(253, 251, 251, 0.7);
+    color: rgb(3, 2, 2);
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 14px;
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+    text-align: center;
+    visibility: hidden; /* Start hidden */
+}
+
+.auth-message.show {
+    opacity: 1; /* Fade in */
+    visibility: visible; /* Make visible */
+}
+
+.auth-message.success {
+    background-color: rgba(46, 204, 113, 0.85); /* Green for success */
+}
+
+.auth-message.error {
+    background-color: rgba(231, 76, 60, 0.85); /* Red for error */
+}
+
+.auth-message.info {
+    background-color: rgba(52, 152, 219, 0.85); /* Blue for info */
+}
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            .trade-card {
+                padding: 15px;
+            }
+            .trade-card h2 {
+                font-size: 20px;
+            }
+            .trade-card select,
+            .trade-card input[type="number"] {
+                font-size: 14px;
+            }
+            .trade-buttons button {
+                padding: 10px 15px;
+                font-size: 16px;
+            }
+            #tradingview-chart-container {
+                height: 300px;
+            }
+            .trade-tab {
+                padding: 10px 15px;
+                font-size: 14px;
+            }
+            /* Converter specific responsive adjustments */
+            .conversion-card {
+                padding: 15px;
+            }
+            .input-group input[type="number"],
+            .currency-dropdown {
+                font-size: 14px;
+            }
+            .trade-button-converter {
+                padding: 12px;
+                font-size: 16px;
+            }
+            .balance-section {
+                padding: 15px;
+            }
+
+        }
+    </style>
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+</head>
+<body>
+    <header>
+        <h1>Trade</h1>
+        <button onclick="location.href='index.html'">Market</button>
+    </header>
+
+    <div class="container">
+        <div class="trade-mode-selector">
+            <button id="spotCryptoTab" class="trade-tab active">Trade Crypto</button>
+            <button id="instantSpotTab" class="trade-tab">Instant Spot</button>
+            <button id="sellFromAssetsTab" class="trade-tab">Sell from Assets</button> </div>
+
+        <div id="spotCryptoTradeView" class="trade-view active">
+            <div class="trade-card">
+                <h2>Trade Crypto</h2>
+
+                <label for="coin-selector">Select Coin:</label>
+                <select id="coin-selector">
+                    <option value="">Loading coins...</option>
+                </select>
+
+                <div class="current-price-info">
+                    Price: <span id="current-price-display">$0.00</span>
+                </div>
+
+                <label for="trade-amount">Amount (USD):</label>
+                <input type="number" id="trade-amount" placeholder="Enter amount" step="0.01" min="0">
+
+                <p class="calculation-display" id="crypto-calculation-display">You will get approximately: <span id="calculated-crypto-amount">0.00</span> <span id="calculated-crypto-symbol"></span></p>
+
+                <div class="trade-buttons">
+                    <button id="buy-button">Buy</button>
+                </div>
+            </div>
+
+            <div id="tradingview-chart-container">
+                <div class="tradingview-widget-container__widget" style="height:calc(100% - 32px);width:100%;"></div>
+            </div>
+        </div>
+
+        <div id="instantSpotTradeView" class="trade-view hidden">
+            <div class="conversion-card">
+                <div class="loading-overlay" id="loading-overlay" style="display: none;">
+                    <i class="fas fa-spinner fa-spin"></i> Loading prices...
+                </div>
+                <div class="available-balance">Available: <span id="instant-available-balance-display">0 USDT</span></div>
+
+                <div class="input-group">
+                    <input type="number" id="issued-amount" placeholder="0.00" step="0.01">
+                    <div class="currency-display">
+                        <img id="issued-currency-logo" src="" alt="Issued Currency Logo" onerror="this.onerror=null;this.src='https://placehold.co/20x20/F0F0F0/000?text=₮';">
+                        <span id="issued-currency-symbol">USDT</span>
+                        <select id="issued-currency-dropdown" class="currency-dropdown"></select>
+                    </div>
+                </div>
+
+                <div class="swap-icon-container">
+                    <i class="fas fa-exchange-alt swap-icon" id="swap-currencies"></i>
+                </div>
+
+                <div class="input-group">
+                    <input type="number" id="obtained-amount" placeholder="0.00" step="0.01">
+                    <div class="currency-display">
+                        <img id="obtained-currency-logo" src="" alt="Obtained Currency Logo" onerror="this.onerror=null;this.src='https://placehold.co/20x20/8A92B2/FFF?text=Ξ';">
+                        <span id="obtained-currency-symbol">ETH</span>
+                        <select id="obtained-currency-dropdown" class="currency-dropdown"></select>
+                    </div>
+                </div>
+
+                <div class="trade-rate-info">
+                    Trade rate: 1 <span id="rate-base-symbol">USDT</span> ≈ <span id="trade-rate-value">0.00000000</span> <span id="rate-target-symbol">ETH</span>
+                </div>
+
+                <button class="trade-button-converter" id="instant-trade-converter-button">Trade</button>
+            </div>
+
+        </div>
+
+        <div id="sellFromAssetsView" class="trade-view hidden">
+            <div class="trade-card">
+                <h2>Sell Your Assets</h2>
+                <div class="available-balance" id="sell-asset-balance-display">Available: <span id="current-selected-asset-balance">0.00</span> <span id="current-selected-asset-symbol"></span></div>
+
+                <label for="asset-to-sell-selector">Select Asset to Sell:</label>
+                <select id="asset-to-sell-selector">
+                    <option value="">Loading your assets...</option>
+                </select>
+
+                <label for="sell-asset-quantity">Quantity to Sell:</label>
+                <input type="number" id="sell-asset-quantity" placeholder="Enter quantity" step="0.00000001" min="0">
+
+                <p class="calculation-display">You will receive approximately: <span id="received-usd-amount">0.00</span> USD</p>
+
+                <button id="confirm-sell-asset-button" class="trade-button-converter">Confirm Sell</button>
+            </div>
+        </div>
+        </div>
+
+    <div class="bottom-nav">
+        <a href="index.html" class="nav-item">
+            <i class="fas fa-chart-line"></i>
+            <span>Market</span>
+        </a>
+        <a href="trade.html" class="nav-item active">
+            <i class="fas fa-exchange-alt"></i>
+            <span>Trade</span>
+        </a>
+        <a href="wallet.html" class="nav-item">
+            <i class="fas fa-wallet"></i>
+            <span>Wallet</span>
+        </a>
+          <a href="news.html" class="nav-item">
+            <i class="fas fa-newspaper"></i>
+            <span>News</span>
+        <a href="profile.html" class="nav-item">
+            <i class="fas fa-user"></i>
+            <span>Profile</span>
+        </a>
+    </div>
+<div id="authMessage"></div>
+    <script src="../js/trade.js"></script>
+    
+
+    
+</body>
+</html>

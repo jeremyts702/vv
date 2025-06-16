@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Level -JahnexPro</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #08090b; /* Light grey background */
+            color: #aa2d2d;
+            line-height: 1.6;
+        }
+
+        .level-header {
+            background-color: #0d0c09; /* Light yellow background as per image */
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+            height: 120px; /* Adjusted height */
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .level-header .back-arrow {
+            font-size: 24px;
+            color: #8c3e3e;
+            margin-right: 15px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            position: absolute;
+            left: 20px;
+            top: 20px; /* Positioned at the top */
+        }
+
+        .level-header-content {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            margin-left: 50px; /* Space for back arrow */
+            flex-grow: 1;
+            text-align: left;
+        }
+
+        .level-header h1 {
+            margin: 0;
+            font-size: 18px;
+            color: #7e3434; /* "Current Level" color */
+            font-weight: normal;
+        }
+
+        .level-header h2 {
+            margin: 5px 0 0;
+            font-size: 32px;
+            color: #6b3333; /* "Lv 1" color */
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+        }
+
+        .level-header .upgrade-button {
+            background-color: #36dae2; /* Yellow button color */
+            color: #333;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-left: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .level-header .upgrade-button i {
+            margin-left: 5px;
+            font-size: 12px;
+        }
+
+        .level-header .level-badge {
+            width: 80px; /* Size of the badge image */
+            height: 80px;
+            background-image: url('path/to/lv1-badge.png'); /* Replace with your actual Lv1 badge image */
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .description-section {
+            padding: 20px;
+            background-color: #050709; /* Match body background */
+            color: #f1eeee;
+            font-size: 14px;
+        }
+
+        .level-card-list {
+            padding: 0 20px 20px; /* Padding for the list itself */
+            background-color: #040507; /* Match body background */
+        }
+
+        .level-card {
+            background-color: #a9adae; /* White card background */
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .level-card-info {
+            flex-grow: 1;
+        }
+
+        .level-card h3 {
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-size: 18px;
+            color: #333;
+            display: flex;
+            align-items: center;
+        }
+
+        .level-card h3 i {
+            margin-right: 8px;
+            color: #b84b07; /* Yellow star/icon color */
+        }
+
+        .level-card p {
+            margin: 5px 0;
+            font-size: 14px;
+            color: #666;
+            display: flex;
+            align-items: center;
+        }
+
+        .level-card p i {
+            margin-right: 8px;
+            color: #999; /* Icon color for details */
+        }
+
+        .level-card .value {
+            color: #333; /* Darker color for actual values */
+            font-weight: bold;
+            margin-left: 5px;
+        }
+
+        .level-card .reward-value {
+            color: #00b894; /* Green for rewards */
+        }
+
+        .level-card .upgrade-text {
+            color: #ffa500; /* Orange for upgrade text */
+        }
+
+        .level-card .card-badge {
+            width: 70px; /* Size of the grey badge on the right */
+            height: 70px;
+            background-color: #e0e0e0; /* Grey background */
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            color: #bbb; /* Lighter grey for inner icon */
+            overflow: hidden; /* Ensures icon is contained */
+            position: relative;
+        }
+
+        .level-card .card-badge i {
+            /* This is a placeholder for the inner icon if you have one.
+               The image shows an abstract shape. */
+        }
+
+        /* Specific badge colors/backgrounds for each level if you have images */
+        .level-card.lv1 .card-badge { background-image: url('/assets/Screenshot 2025-06-10 231112.png'); background-size: contain; } /* Replace with your actual badge images */
+        .level-card.lv2 .card-badge { background-image: url('/assets/Screenshot 2025-06-10 231126.png'); background-size: contain; }
+        .level-card.lv3 .card-badge { background-image: url('/assets/Screenshot 2025-06-10 231137.png'); background-size: contain; }
+        .level-card.lv4 .card-badge { background-image: url('/assets/Screenshot 2025-06-10 231149.png'); background-size: contain; }
+        .level-card.lv5 .card-badge { background-image: url('/assets/Screenshot 2025-06-10 231203.png'); background-size: contain; }
+        .level-card.lv6 .card-badge { background-image: url('/assets/Screenshot 2025-06-11 001418.png'); background-size: contain; }
+
+
+        .rules-section {
+            padding: 20px;
+            background-color: #fff; /* White background */
+            border-top: 1px solid #eee;
+            margin-top: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            margin: 0 20px 20px; /* Match padding of level list */
+        }
+
+        .rules-section h3 {
+            margin-top: 0;
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .rules-section ol {
+            padding-left: 20px;
+            margin: 0;
+        }
+
+        .rules-section ol li {
+            margin-bottom: 10px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 600px) {
+            .level-header {
+                height: 100px;
+                padding: 15px;
+            }
+            .level-header .back-arrow {
+                left: 15px;
+                top: 15px;
+            }
+            .level-header-content {
+                margin-left: 40px;
+            }
+            .level-header h2 {
+                font-size: 28px;
+            }
+            .level-header .level-badge {
+                width: 70px;
+                height: 70px;
+            }
+            .level-card {
+                padding: 15px;
+            }
+            .level-card h3 {
+                font-size: 16px;
+            }
+            .level-card p {
+                font-size: 13px;
+            }
+            .level-card .card-badge {
+                width: 60px;
+                height: 60px;
+            }
+            .description-section, .level-card-list, .rules-section {
+                padding-left: 15px;
+                padding-right: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="level-header">
+        <a href="profile.html" class="back-arrow"><i class="fas fa-chevron-left"></i></a>
+        <div class="level-header-content">
+            <h1>Current Level</h1>
+<h2 id="Current Level">Lv 1 <a href="wallet.html#deposit" class="upgrade-button">Go to Upgrade <i class="fas fa-chevron-right"></i></a></h2>        </div>
+       
+<div class="level-badge"></div>
+    </div>
+
+    <div class="description-section">
+        <p>Description</p>
+    </div>
+
+    <div class="level-card-list">
+        <div class="level-card lv1">
+            <div class="level-card-info">
+                <h3><i class="fas fa-star"></i> LV1</h3>
+                <p><i class="fas fa-database"></i> Total USDT <span class="value">500 USDT</span></p>
+                <p><i class="fas fa-gift"></i> Upgrade gift <span class="value reward-value upgrade-text">1 USDT</span></p>
+                <p><i class="fas fa-calendar-alt"></i> Weekly award <span class="value reward-value">0 USDT</span></p>
+            </div>
+            <div class="card-badge lv1"></div>
+        </div>
+
+        <div class="level-card lv2">
+            <div class="level-card-info">
+                <h3><i class="fas fa-star"></i> LV2</h3>
+                <p><i class="fas fa-database"></i> Total USDT <span class="value">5,000 USDT</span></p>
+                <p><i class="fas fa-gift"></i> Upgrade gift <span class="value reward-value upgrade-text">10 USDT</span></p>
+                <p><i class="fas fa-calendar-alt"></i> Weekly award <span class="value reward-value">1 USDT</span></p>
+            </div>
+            <div class="card-badge lv2"></div>
+        </div>
+
+        <div class="level-card lv3">
+            <div class="level-card-info">
+                <h3><i class="fas fa-star"></i> LV3</h3>
+                <p><i class="fas fa-database"></i> Total USDT <span class="value">30,000 USDT</span></p>
+                <p><i class="fas fa-gift"></i> Upgrade gift <span class="value reward-value upgrade-text">500 USDT</span></p>
+                <p><i class="fas fa-calendar-alt"></i> Weekly award <span class="value reward-value">10 USDT</span></p>
+            </div>
+            <div class="card-badge lv3"></div>
+        </div>
+
+        <div class="level-card lv4">
+            <div class="level-card-info">
+                <h3><i class="fas fa-star"></i> LV4</h3>
+                <p><i class="fas fa-database"></i> Total USDT <span class="value">80,000 USDT</span></p>
+                <p><i class="fas fa-gift"></i> Upgrade gift <span class="value reward-value upgrade-text">1,000 USDT</span></p>
+                <p><i class="fas fa-calendar-alt"></i> Weekly award <span class="value reward-value">50 USDT</span></p>
+            </div>
+            <div class="card-badge lv4"></div>
+        </div>
+
+        <div class="level-card lv5">
+            <div class="level-card-info">
+                <h3><i class="fas fa-star"></i> LV5</h3>
+                <p><i class="fas fa-database"></i> Total USDT <span class="value">200,000 USDT</span></p>
+                <p><i class="fas fa-gift"></i> Upgrade gift <span class="value reward-value upgrade-text">3,000 USDT</span></p>
+                <p><i class="fas fa-calendar-alt"></i> Weekly award <span class="value reward-value">100 USDT</span></p>
+            </div>
+            <div class="card-badge lv5"></div>
+        </div>
+
+        <div class="level-card lv6">
+            <div class="level-card-info">
+                <h3><i class="fas fa-star"></i> LV6</h3>
+                <p><i class="fas fa-database"></i> Total USDT <span class="value">500,000 USDT</span></p>
+                <p><i class="fas fa-gift"></i> Upgrade gift <span class="value reward-value upgrade-text">5,000 USDT</span></p>
+                <p><i class="fas fa-calendar-alt"></i> Weekly award <span class="value reward-value">500 USDT</span></p>
+            </div>
+            <div class="card-badge lv6"></div>
+        </div>
+    </div>
+
+    <div class="rules-section">
+        <h3>Rules</h3>
+        <ol>
+            <li>Member level definition<br>Each membership level will be automatically upgraded or downgraded according to the user's total assets</li>
+            <li>Upgrade conditions<br>Total assets meet the requirements to upgrade: When the user's total assets reach the required amount for that level, it can be automatically upgraded to that level.</li>
+            <li>Reward mechanism<br>Upgrade bonus: When a user first upgrades to a specific level, a one-time upgrade bonus will be issued
+Weekly red envelope: A red envelope reward issued every Monday for users of the current level</li>
+
+            </ol>
+    </div>
+  <script src="js/level.js"></script> </html>
+    </body>
+</html>

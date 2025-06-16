@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - JahnexPro</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* CSS Variables for easier color management */
+        :root {
+            --primary-bg: #f0f2f5; /* Light grey background */
+            --card-bg: #ffffff;    /* White card background */
+            --text-color: #333;
+            --heading-color: #2c3e50;
+
+            /* Revamped Button Colors */
+            --button-approve: #4CAF50; /* Strong Green */
+            --button-approve-hover: #43A047;
+            --button-reject: #E53935; /* Deep Red */
+            --button-reject-hover: #C62828;
+            --button-edit: #2196F3;   /* Bright Blue */
+            --button-edit-hover: #1976D2;
+            --button-delete: #FF5722; /* Vibrant Orange-Red (distinct from reject) */
+            --button-delete-hover: #E64A19;
+            --button-submit: #4CAF50; /* Keep submit button similar to approve for positive action */
+            --button-submit-hover: #43A047;
+
+            --border-color: #e0e6ed;
+            --shadow-light: 0 4px 15px rgba(0, 0, 0, 0.08);
+            --shadow-medium: 0 8px 25px rgba(0, 0, 0, 0.12);
+        }
+
+        /* General Body & Typography */
+        body {
+            font-family: 'Poppins', sans-serif; /* Poppins for a modern feel */
+            margin: 0;
+            padding: 0;
+            background-color: var(--primary-bg);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding-bottom: 30px;
+            scroll-behavior: smooth;
+        }
+
+        .container {
+            width: 95%;
+            max-width: 1400px; /* Slightly wider max-width */
+            margin: 30px auto;
+            padding: 30px;
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: var(--shadow-medium); /* More pronounced shadow */
+        }
+
+        h1 {
+            color: var(--heading-color);
+            text-align: center;
+            margin-bottom: 35px;
+            font-size: 2.5em; /* Larger main title */
+            font-weight: 700;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.05); /* Subtle text shadow */
+        }
+
+        h2 {
+            color: var(--heading-color);
+            margin-top: 0;
+            margin-bottom: 25px; /* More space below headings */
+            font-size: 2em; /* Larger section titles */
+            font-weight: 600;
+            border-bottom: 3px solid var(--border-color); /* Thicker separator */
+            padding-bottom: 12px;
+            letter-spacing: 0.02em;
+        }
+
+        /* Card Styling */
+        .card {
+            background-color: var(--card-bg);
+            padding: 30px; /* More padding */
+            border-radius: 10px;
+            box-shadow: var(--shadow-light);
+            margin-top: 30px; /* More space between sections */
+            border: 1px solid var(--border-color);
+        }
+
+        /* Table Styling */
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 25px; /* More space above tables */
+            font-size: 0.95em; /* Slightly larger text in tables */
+            background-color: #fdfdfd;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05); /* Soft shadow for tables */
+        }
+
+        th, td {
+            padding: 14px 18px; /* More padding in cells */
+            border-bottom: 1px solid #ebf0f5; /* Lighter border */
+            text-align: left;
+        }
+
+        th {
+            background-color: #eef2f6; /* Light header background */
+            font-weight: 600;
+            color: #5a6b7d;
+            text-transform: uppercase;
+            letter-spacing: 0.08em; /* More spacing for headers */
+        }
+
+        tr:nth-child(even) {
+            background-color: #fcfcfc;
+        }
+
+        tr:hover {
+            background-color: #f5f8fa; /* More noticeable hover effect */
+            transition: background-color 0.3s ease;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        /* Button Styling */
+        .button-group {
+            display: flex;
+            gap: 10px; /* More space between buttons */
+            flex-wrap: wrap;
+            justify-content: flex-start;
+            margin-top: 5px; /* Adjust spacing above button group */
+        }
+
+        .action-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 20px; /* Increased padding for larger buttons */
+            border: none;
+            border-radius: 8px; /* More rounded buttons */
+            cursor: pointer;
+            font-size: 1em; /* Slightly larger button text */
+            font-weight: 600; /* Bolder text */
+            transition: all 0.3s ease-in-out; /* Smoother transitions */
+            white-space: nowrap;
+            text-transform: uppercase; /* Uppercase text */
+            letter-spacing: 0.05em; /* Letter spacing */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Initial shadow */
+        }
+
+        /* Specific Button Colors and enhanced hover effects */
+        .action-button.approve-deposit,
+        .action-button.approve-withdrawal {
+            background-color: var(--button-approve);
+            color: white;
+        }
+        .action-button.approve-deposit:hover,
+        .action-button.approve-withdrawal:hover {
+            background-color: var(--button-approve-hover);
+            transform: translateY(-3px) scale(1.02); /* Lift and slight scale effect */
+            box-shadow: 0 8px 20px rgba(76, 175, 80, 0.5); /* Stronger shadow */
+        }
+
+        .action-button.reject,
+        .action-button.reject-deposit,
+        .action-button.reject-withdrawal,
+        .action-button.reject-order {
+            background-color: var(--button-reject);
+            color: white;
+        }
+        .action-button.reject:hover,
+        .action-button.reject-deposit:hover,
+        .action-button.reject-withdrawal:hover,
+        .action-button.reject-order:hover {
+            background-color: var(--button-reject-hover);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 8px 20px rgba(229, 57, 53, 0.5);
+        }
+
+        .btn-edit-balance {
+            background-color: var(--button-edit);
+            color: white;
+        }
+        .btn-edit-balance:hover {
+            background-color: var(--button-edit-hover);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 8px 20px rgba(33, 150, 243, 0.5);
+        }
+
+        .action-button.delete-user { /* New style for delete button */
+            background-color: var(--button-delete);
+            color: white;
+        }
+        .action-button.delete-user:hover {
+            background-color: var(--button-delete-hover);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 8px 20px rgba(255, 87, 34, 0.5);
+        }
+
+        /* Modal Styling */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.7); /* Darker, more opaque overlay */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: fadeInOverlay 0.3s ease-out;
+        }
+        @keyframes fadeInOverlay {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background-color: var(--card-bg);
+            padding: 35px; /* More padding */
+            border-radius: 12px;
+            box-shadow: var(--shadow-medium);
+            width: 90%;
+            max-width: 600px; /* Larger modal */
+            position: relative;
+            animation: fadeInScale 0.3s ease-out; /* Scale and fade in */
+        }
+        @keyframes fadeInScale {
+            from { opacity: 0; transform: translateY(-30px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .close-button {
+            color: #888;
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 36px; /* Even larger close button */
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+        .close-button:hover,
+        .close-button:focus {
+            color: #333;
+        }
+
+        .input-group {
+            margin-bottom: 25px; /* More space between input groups */
+        }
+        .input-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: var(--heading-color);
+            font-size: 1.1em;
+        }
+        .input-group input[type="number"],
+        .input-group select {
+            width: calc(100% - 28px); /* Adjust for padding and border */
+            padding: 14px; /* More padding */
+            border: 1px solid #ddd;
+            border-radius: 6px; /* Slightly more rounded */
+            font-size: 1.1em;
+            box-sizing: border-box;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        .input-group input[type="number"]:focus,
+        .input-group select:focus {
+            border-color: var(--button-edit);
+            box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.2);
+            outline: none;
+        }
+
+        .modal-content button[type="submit"] {
+            width: 100%;
+            padding: 15px 25px; /* Larger submit button */
+            background-color: var(--button-submit);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.2em; /* Larger font */
+            font-weight: 600;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .modal-content button[type="submit"]:hover {
+            background-color: var(--button-submit-hover);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 8px 20px rgba(76, 175, 80, 0.5);
+        }
+
+        /* --- Chat Specific Styles --- */
+        .chat-container {
+            display: flex;
+            height: 600px; /* Fixed height for the chat area */
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            box-shadow: var(--shadow-light);
+            margin-top: 30px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        .online-users-list {
+            width: 300px; /* Fixed width for user list */
+            border-right: 1px solid var(--border-color);
+            background-color: #f8fafd;
+            overflow-y: auto;
+            padding: 15px 0;
+        }
+
+        .online-users-list h3 {
+            padding: 0 15px 10px;
+            margin: 0 0 15px;
+            border-bottom: 1px solid #eef2f6;
+            color: var(--heading-color);
+            font-size: 1.2em;
+        }
+
+        .online-user-item {
+            padding: 12px 15px;
+            cursor: pointer;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+
+        .online-user-item:hover {
+            background-color: #e6f7ff;
+            color: #007bff;
+        }
+
+        .online-user-item.active {
+            background-color: #007bff;
+            color: white;
+            font-weight: 600;
+        }
+        .online-user-item.active .online-status-indicator {
+             background-color: #a7ffeb; /* Lighter green for active user */
+             border-color: white;
+        }
+
+        .online-status-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: #4CAF50; /* Green for online */
+            border: 1px solid #fff;
+            margin-right: 10px;
+            box-shadow: 0 0 3px rgba(0,0,0,0.2);
+        }
+
+        .chat-window {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .chat-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--border-color);
+            background-color: #eef2f6;
+            color: var(--heading-color);
+            font-weight: 600;
+            font-size: 1.1em;
+            text-align: center;
+        }
+        .chat-header span {
+            color: #007bff;
+        }
+
+        .messages-display {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 15px 20px;
+            background-color: #fdfdfd;
+            display: flex;
+            flex-direction: column; /* Messages stack vertically */
+            gap: 10px; /* Space between messages */
+        }
+
+        .messages-display p {
+            margin: 0;
+            padding: 10px 15px;
+            border-radius: 20px; /* More rounded message bubbles */
+            max-width: 75%;
+            word-wrap: break-word;
+            line-height: 1.4;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.08); /* Subtle shadow for messages */
+        }
+
+        .message-from-user {
+            background-color: #e0f7fa; /* Light blue for user messages (to admin) */
+            align-self: flex-start; /* Align user messages to the left */
+            color: #333;
+        }
+
+        .message-from-admin {
+            background-color: #d1c4e9; /* Light purple for admin messages (to user) */
+            align-self: flex-end; /* Align admin messages to the right */
+            color: #333;
+        }
+
+        .chat-input-area {
+            display: flex;
+            padding: 15px;
+            border-top: 1px solid var(--border-color);
+            background-color: #eef2f6;
+        }
+
+        .chat-input-area input {
+            flex-grow: 1;
+            padding: 12px 15px;
+            border: 1px solid #ccc;
+            border-radius: 25px; /* Pill-shaped input */
+            font-size: 1em;
+            margin-right: 10px;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .chat-input-area input:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
+            outline: none;
+        }
+
+        .chat-input-area button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 25px; /* Pill-shaped button */
+            padding: 12px 20px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 4px 10px rgba(0, 123, 255, 0.2);
+        }
+
+        .chat-input-area button:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 123, 255, 0.3);
+        }
+
+        .no-user-selected-message {
+            text-align: center;
+            color: #888;
+            padding: 20px;
+            font-style: italic;
+        }
+
+        /* Responsive Adjustments (Kept similar logic, adjusted values for new styles) */
+        @media (max-width: 992px) {
+            .container {
+                padding: 20px;
+            }
+            h1 {
+                font-size: 2em;
+            }
+            h2 {
+                font-size: 1.7em;
+            }
+            .card {
+                padding: 20px;
+            }
+            th, td {
+                padding: 12px 15px;
+            }
+            .action-button {
+                padding: 8px 15px;
+                font-size: 0.9em;
+            }
+            .modal-content {
+                padding: 25px;
+            }
+            .input-group label {
+                font-size: 1em;
+            }
+            .input-group input[type="number"],
+            .input-group select {
+                padding: 12px;
+                font-size: 1em;
+            }
+            .modal-content button[type="submit"] {
+                padding: 12px 20px;
+                font-size: 1.1em;
+            }
+
+            /* Chat responsive */
+            .chat-container {
+                flex-direction: column;
+                height: auto;
+            }
+            .online-users-list {
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+                height: 200px; /* Shorter user list on mobile */
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                width: 100%;
+                margin: 15px 0;
+                padding: 15px;
+                border-radius: 0;
+                box-shadow: none; /* Remove shadow on very small screens for cleaner look */
+            }
+            h1 {
+                font-size: 1.8em;
+                margin-bottom: 25px;
+            }
+            h2 {
+                font-size: 1.6em;
+                margin-bottom: 18px;
+            }
+            .card {
+                margin-top: 15px;
+                box-shadow: none; /* Remove shadow on very small screens */
+                border-radius: 0;
+                border-left: none;
+                border-right: none;
+            }
+            /* Stack table elements for better mobile readability */
+            table, thead, tbody, th, td, tr {
+                display: block;
+            }
+            thead tr {
+                position: absolute;
+                top: -9999px;
+                left: -9999px;
+            }
+            tr {
+                border: 1px solid #eef2f6;
+                margin-bottom: 15px;
+                border-radius: 8px;
+                overflow: hidden;
+            }
+            td {
+                border: none;
+                border-bottom: 1px solid #eee;
+                position: relative;
+                padding-left: 50%;
+                text-align: right;
+                font-size: 0.9em;
+            }
+            td:last-child {
+                border-bottom: none;
+            }
+            td:before {
+                position: absolute;
+                top: 0;
+                left: 6px;
+                width: 45%;
+                padding-right: 10px;
+                white-space: nowrap;
+                text-align: left;
+                font-weight: 600;
+                color: #555;
+                line-height: 1.8; /* Align with actual content */
+            }
+            /* Label mapping for each column - ensure these match your column headers */
+            #depositTableBody td:nth-of-type(1):before { content: "Deposit ID:"; }
+            #depositTableBody td:nth-of-type(2):before { content: "User:"; }
+            #depositTableBody td:nth-of-type(3):before { content: "Amount:"; }
+            #depositTableBody td:nth-of-type(4):before { content: "Currency:"; }
+            #depositTableBody td:nth-of-type(5):before { content: "Txn ID:"; }
+            #depositTableBody td:nth-of-type(6):before { content: "Status:"; }
+            #depositTableBody td:nth-of-type(7):before { content: "Requested:"; }
+            #depositTableBody td:nth-of-type(8):before { content: "Actions:"; text-align: right;}
+
+            #withdrawalTableBody td:nth-of-type(1):before { content: "Withdrawal ID:"; }
+            #withdrawalTableBody td:nth-of-type(2):before { content: "User:"; }
+            #withdrawalTableBody td:nth-of-type(3):before { content: "Amount:"; }
+            #withdrawalTableBody td:nth-of-type(4):before { content: "Currency:"; }
+            #withdrawalTableBody td:nth-of-type(5):before { content: "Address:"; }
+            #withdrawalTableBody td:nth-of-type(6):before { content: "Status:"; }
+            #withdrawalTableBody td:nth-of-type(7):before { content: "Requested:"; }
+            #withdrawalTableBody td:nth-of-type(8):before { content: "Actions:"; text-align: right;}
+
+            #userTableBody td:nth-of-type(1):before { content: "User ID:"; }
+            #userTableBody td:nth-of-type(2):before { content: "Email/Username:"; }
+            #userTableBody td:nth-of-type(3):before { content: "Role:"; }
+            #userTableBody td:nth-of-type(4):before { content: "Balance:"; }
+            #userTableBody td:nth-of-type(5):before { content: "Registered:"; }
+            #userTableBody td:nth-of-type(6):before { content: "Actions:"; text-align: right;}
+
+            #tradeOrderTableBody td:nth-of-type(1):before { content: "Order ID:"; }
+            #tradeOrderTableBody td:nth-of-type(2):before { content: "User ID:"; }
+            #tradeOrderTableBody td:nth-of-type(3):before { content: "Type:"; }
+            #tradeOrderTableBody td:nth-of-type(4):before { content: "Coin:"; }
+            #tradeOrderTableBody td:nth-of-type(5):before { content: "Amount:"; }
+            #tradeOrderTableBody td:nth-of-type(6):before { content: "Price:"; }
+            #tradeOrderTableBody td:nth-of-type(7):before { content: "Total:"; }
+            #tradeOrderTableBody td:nth-of-type(8):before { content: "Status:"; }
+            #tradeOrderTableBody td:nth-of-type(9):before { content: "Order Date:"; }
+            #tradeOrderTableBody td:nth-of-type(10):before { content: "Actions:"; text-align: right;}
+
+            .button-group {
+                justify-content: center; /* Center buttons on mobile */
+                margin-top: 15px;
+            }
+            .action-button {
+                flex: 1 1 45%; /* Allow two buttons per row */
+                max-width: 160px;
+                margin: 5px; /* Add some margin around buttons on mobile */
+            }
+        }
+        @media (max-width: 480px) {
+            .action-button {
+                flex: 1 1 100%; /* Stack buttons vertically on very small screens */
+                max-width: unset;
+                margin: 5px 0;
+            }
+            .modal-content {
+                padding: 20px;
+            }
+            .input-group label {
+                font-size: 0.95em;
+            }
+            .input-group input[type="number"],
+            .input-group select {
+                padding: 10px;
+                font-size: 0.95em;
+            }
+            .modal-content button[type="submit"] {
+                font-size: 1em;
+            }
+            .chat-input-area {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .chat-input-area input {
+                margin-right: 0;
+            }
+            .chat-input-area button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Admin Dashboard</h1>
+
+        <section class="card">
+            <h2>Users Management</h2>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>User ID</th>
+                            <th>Email/Phone</th>
+                            <th>Role</th>
+                            <th>Balance (USD)</th>
+                            <th>Registered Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="userTableBody">
+                        <tr>
+                            <td>USR123</td>
+                            <td>example@user.com</td>
+                            <td>user</td>
+                            <td>$5000.00</td>
+                            <td>2023-01-15</td>
+                            <td>
+                                <div class="button-group">
+                                    <button class="action-button btn-edit-balance" data-user-id="USR123" data-user-email="example@user.com" data-current-balance="5000.00">Edit Balance</button>
+                                    <button class="action-button delete-user" data-user-id="USR123">Delete</button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr><td colspan="6" class="text-center">Loading users...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2>Pending Deposit Requests</h2>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Deposit ID</th>
+                            <th>User (Email)</th>
+                            <th>Amount</th>
+                            <th>Currency</th>
+                            <th>Transaction ID</th>
+                            <th>Status</th>
+                            <th>Requested Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="depositTableBody">
+                        <tr>
+                            <td>DEP001</td>
+                            <td>user1@example.com</td>
+                            <td>100.00</td>
+                            <td>USD</td>
+                            <td>TXN12345</td>
+                            <td>Pending</td>
+                            <td>2024-05-20</td>
+                            <td>
+                                <div class="button-group">
+                                    <button class="action-button approve-deposit" data-deposit-id="DEP001">Approve</button>
+                                    <button class="action-button reject-deposit" data-deposit-id="DEP001">Reject</button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr><td colspan="8" class="text-center">Loading pending deposits...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2>Pending Withdrawal Requests</h2>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Withdrawal ID</th>
+                            <th>User (Email)</th>
+                            <th>Amount</th>
+                            <th>Currency</th>
+                            <th>Address</th>
+                            <th>Status</th>
+                            <th>Requested Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="withdrawalTableBody">
+                        <tr>
+                            <td>WDL001</td>
+                            <td>user2@example.com</td>
+                            <td>50.00</td>
+                            <td>BTC</td>
+                            <td>bc1q...xyz</td>
+                            <td>Pending</td>
+                            <td>2024-05-18</td>
+                            <td>
+                                <div class="button-group">
+                                    <button class="action-button approve-withdrawal" data-withdrawal-id="WDL001">Approve</button>
+                                    <button class="action-button reject-withdrawal" data-withdrawal-id="WDL001">Reject</button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr><td colspan="8" class="text-center">Loading pending withdrawals...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2>Trade Order Management</h2>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>User ID</th>
+                            <th>Type</th>
+                            <th>Coin</th>
+                            <th>Amount</th>
+                            <th>Price (USD)</th>
+                            <th>Total (USD)</th>
+                            <th>Status</th>
+                            <th>Order Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tradeOrderTableBody">
+                        <tr>
+                            <td>TRD001</td>
+                            <td>USR123</td>
+                            <td>buy</td>
+                            <td>BTC</td>
+                            <td>0.01</td>
+                            <td>65000.00</td>
+                            <td>650.00</td>
+                            <td>Pending</td>
+                            <td>2024-05-21</td>
+                            <td>
+                                <div class="button-group">
+                                    <button class="action-button approve-order" data-order-id="TRD001">Approve</button>
+                                    <button class="action-button reject-order" data-order-id="TRD001">Reject</button>
+                                    </div>
+                            </td>
+                        </tr>
+                        <tr><td colspan="10" class="text-center">Loading pending trade orders...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2>Live Chat with Users</h2>
+            <div class="chat-container">
+                <div class="online-users-list">
+                    <h3>Online Users</h3>
+                    <div id="onlineUsersListContent">
+                        <div class="online-user-item text-center">Loading online users...</div>
+                    </div>
+                </div>
+                <div class="chat-window">
+                    <div class="chat-header">
+                        Chatting with: <span id="currentChatUser">No user selected</span>
+                    </div>
+                    <div id="adminMessagesDisplay" class="messages-display">
+                        <p class="no-user-selected-message">Select a user from the left to start chatting.</p>
+                    </div>
+                    <div class="chat-input-area">
+                        <input type="text" id="adminMessageInput" placeholder="Type your message..." disabled>
+                        <button id="sendAdminMessageBtn" disabled>Send</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+        </div>
+
+    <div id="editBalanceModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2>Edit User Balance</h2>
+            <form id="editBalanceForm">
+                <input type="hidden" id="editUserId">
+                <p>User: <strong id="editUserEmailPhone"></strong> (Current Balance: $<span id="editUserCurrentBalance"></span>)</p>
+                <div class="input-group">
+                    <label for="balanceAmount">Amount:</label>
+                    <input type="number" id="balanceAmount" step="0.01" min="0.01" required>
+                </div>
+                <div class="input-group">
+                    <label for="balanceType">Operation:</label>
+                    <select id="balanceType" required>
+                        <option value="add">Add</option>
+                        <option value="subtract">Subtract</option>
+                    </select>
+                </div>
+                <button type="submit">Update Balance</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="../js/admin.js"></script>
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+</body>
+</html>
