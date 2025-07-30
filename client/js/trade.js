@@ -6,11 +6,11 @@
 const token = localStorage.getItem('token'); 
 
 // Pass the token in the query object when establishing the socket connection
-const socket = io("http://localhost:5000", { 
+const socket = io("https://vv-ncd0.onrender.com", { 
     query: { token: token } 
 }); // Helper function to show floating messages
 
-const BASE_URL = 'http://localhost:5000'; // Define your backend URL for HTTP requests
+const BASE_URL = 'https://vv-ncd0.onrender.com'; // Define your backend URL for HTTP requests
 
 function showMessage(message, type) {
     const authMessage = document.getElementById('authMessage');
