@@ -3,7 +3,7 @@
 document.addEventListener('DOMContentLoaded', async () => {
     const userId = localStorage.getItem('userId');
     const token = localStorage.getItem('token');
-    const BASE_URL = 'http://localhost:5000'; // Your backend base URL
+    const BASE_URL = 'https://vv-ncd0.onrender.com'; // Your backend base URL
 
     const currentLevelDisplay = document.getElementById('currentLevelDisplay');
     const levelCards = document.querySelectorAll('.level-card'); // All level cards
