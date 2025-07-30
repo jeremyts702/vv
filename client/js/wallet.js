@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const userId = localStorage.getItem('userId');
     const userRole = localStorage.getItem('userRole');
     const token = localStorage.getItem('token');
-    const BASE_URL = 'http://localhost:5000'; // Your backend base URL
+    const BASE_URL = 'https://vv-ncd0.onrender.com'; // Your backend base URL
 
     // Helper function to show floating messages
     function showMessage(message, type) {
