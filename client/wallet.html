@@ -11,7 +11,7 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #0a0909; /* Light grey background, matching profile/wallet screenshot */
+            background-color: #0a0909; /* Dark background */
             color: #fffcfc;
             line-height: 1.6;
             -webkit-font-smoothing: antialiased;
@@ -21,13 +21,13 @@
 
         .container {
             width: 90%;
-            max-width: 1200px;
+            max-width: 900px; /* Adjusted max-width for a more compact, professional look */
             margin: 20px auto;
             padding: 20px;
-            background-color: #0c0b0b; /* White background for content */
+            background-color: #0c0b0b; /* Slightly lighter dark background for content */
             border-radius: 8px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-            margin-bottom: 15px; /* Space between containers if multiple */
+            margin-bottom: 15px;
         }
 
         /* Header Styles */
@@ -47,92 +47,103 @@
             padding-bottom: 10px;
             margin-bottom: 20px;
         }
+        h2 {
+            text-align: center; /* Center section titles */
+        }
 
         /* Wallet Info Section */
         .wallet-info {
             text-align: center;
             margin-bottom: 30px;
+            background-color: #1a1a2e; /* Darker background for summary */
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.3);
+        }
+
+        .balance-label {
+            font-size: 1em;
+            color: #ccc;
+            margin-bottom: 5px;
+            display: block;
         }
 
         .balance-display {
-            font-size: 2.2em;
-            color: #007bff; /* Primary blue color */
+            font-size: 2.5em; /* Larger for total portfolio */
+            color: #36dae2; /* Accent color for total value */
             font-weight: bold;
             margin-bottom: 10px;
         }
-        .total-portfolio-value { /* NEW STYLE */
-            font-size: 1.8em;
-            color: #28a745; /* Green for total value */
+        .fiat-balance-display { /* Specific style for fiat balance */
+            font-size: 1.5em;
+            color: #f0f0f0;
             font-weight: bold;
-            margin-top: 15px;
-            margin-bottom: 15px;
+            margin-top: 10px;
         }
 
 
-        .asset-item {
+        /* Assets List Styles (Updated for Customization) */
+        .assets-section {
+            margin-top: 30px;
+            background-color: #0c0b0b;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .assets-list-container { /* Container for the list */
+            margin-top: 20px;
+            padding-top: 10px;
+            border-top: 1px solid #2a2a2a;
+        }
+
+        .asset-item { /* Style for each individual asset line */
             display: flex;
-            justify-content: space-between;
+            justify-content: space-between; /* Pushes symbol/quantity to left, value to right */
+            align-items: baseline; /* Aligns text baselines */
             padding: 8px 0;
-            border-bottom: 1px dashed #eee;
+            border-bottom: 1px dashed #2a2a2a; /* Lighter dashed border */
+            font-size: 1.1em;
         }
 
         .asset-item:last-child {
-            border-bottom: none;
+            border-bottom: none; /* No border on the last item */
         }
 
-        /* Form Styles */
-        .input-group {
-            margin-bottom: 15px;
-            text-align: left; /* Align labels/inputs to the left */
-        }
-
-        .input-group label {
-            display: block;
-            margin-bottom: 5px;
+        .asset-symbol-quantity { /* Combines Symbol and Quantity */
             font-weight: bold;
-            color: #555;
+            color: #f0f0f0;
+            flex-grow: 1; /* Allows this part to take up available space */
         }
 
-        .input-group input[type="text"],
-        .input-group input[type="number"],
-        .input-group select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            box-sizing: border-box; /* Include padding in width */
-            font-size: 1em;
+        /* No separate .asset-quantity needed now as it's part of .asset-symbol-quantity */
+
+        .asset-usd-value { /* For the USD value in parentheses */
+            color: #f0f0f0;
+            font-weight: bold;
+            white-space: nowrap; /* Prevents wrapping for the USD value */
+            margin-left: 15px; /* Adds space between quantity and USD value */
         }
 
-        .input-group .address-display {
-            background-color: #e9ecef;
-            padding: 10px;
-            border-radius: 5px;
-            color: #0c0b0b;
-            font-family: 'Courier New', Courier, monospace;
-            word-break: break-all; /* Break long addresses */
-            position: relative; /* For copy button positioning */
+        .text-center {
+            text-align: center;
         }
 
-        .input-group .copy-button {
-            background: none;
-            border: none;
-            color: #007bff;
-            cursor: pointer;
-            font-size: 0.9em;
-            position: absolute;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
+        .hidden {
+            display: none !important;
         }
 
-        .input-group .copy-button:hover {
-            text-decoration: underline;
+        /* Action Buttons Container */
+        .action-buttons {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+            flex-wrap: wrap;
         }
 
         .btn {
             display: inline-block;
-            background-color: #eb0202; /* Primary button color */
+            background-color: #eb0202;
             color: white;
             padding: 10px 20px;
             border: none;
@@ -141,109 +152,98 @@
             font-size: 1.1em;
             margin-top: 10px;
             transition: background-color 0.3s ease;
-        }
-
-        .btn:hover {
-            background-color: hsl(0, 96%, 48%); /* Darker blue on hover */
-        }
-
-        .btn-success {
-            background-color: #28a745;
-        }
-
-        .btn-success:hover {
-            background-color: #218838;
-        }
-
-        .btn-danger {
-            background-color: #dc3545;
-        }
-
-        .btn-danger:hover {
-            background-color: #c82333;
-        }
-
-        .btn-secondary {
-            background-color: #6c757d;
-        }
-
-        .btn-secondary:hover {
-            background-color: #5a6268;
-        }
-
-        .hidden {
-            display: none !important;
-        }
-
-        .address-warning {
-            font-size: 0.85em;
-            color: #dc3545;
-            margin-top: 5px;
-            display: block;
-        }
-
-        /* Action Buttons Container */
-        .action-buttons {
-            display: flex;
-            justify-content: space-around;
-            margin-top: 20px;
-            flex-wrap: wrap; /* Allow buttons to wrap on smaller screens */
-        }
-
-        .action-buttons .btn {
             flex: 1; /* Allow buttons to grow and shrink */
             margin: 5px; /* Space between buttons */
             min-width: 120px; /* Minimum width for buttons */
         }
-        form label {
+
+        .btn:hover {
+            background-color: hsl(0, 96%, 48%);
+        }
+
+        .btn-success { background-color: #28a745; }
+        .btn-success:hover { background-color: #218838; }
+        .btn-danger { background-color: #dc3545; }
+        .btn-danger:hover { background-color: #c82333; }
+        .btn-secondary { background-color: #6c757d; }
+        .btn-secondary:hover { background-color: #5a6268; }
+        .btn-primary { background-color: #007bff; } /* Re-added for deposit/withdrawal form buttons */
+        .btn-primary:hover { background-color: #0056b3; }
+
+
+        /* Form Styles */
+        .input-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        .input-group label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 5px;
             font-weight: bold;
             color: #ccc;
         }
 
-        form input[type="text"],
-        form input[type="number"],
-        form select {
-            width: calc(100% - 20px);
+        .input-group input[type="text"],
+        .input-group input[type="number"],
+        .input-group select {
+            width: 100%;
             padding: 10px;
-            margin-bottom: 15px;
             border: 1px solid #555;
-            border-radius: 4px;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 1em;
             background-color: #333;
             color: #fff;
         }
+        .input-group input[type="text"]::placeholder,
+        .input-group input[type="number"]::placeholder {
+            color: #888;
+        }
 
-        form input[type="submit"] {
-            width: 100%;
-            padding: 12px;
-            background-color: #007bff;
-            color: white;
+        .input-group .address-display {
+            background-color: #1a1a1a; /* Darker background for address box */
+            padding: 10px;
+            border-radius: 5px;
+            color: #f0f0f0;
+            font-family: 'Courier New', Courier, monospace;
+            word-break: break-all;
+            position: relative;
+            border: 1px solid #36dae2; /* Accent border */
+        }
+
+        .input-group .copy-button {
+            background-color: #3a3a3a; /* Darker copy button */
             border: none;
-            border-radius: 4px;
+            color: #36dae2;
             cursor: pointer;
-            font-size: 1.1em;
+            font-size: 0.9em;
+            padding: 5px 10px;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+            margin-top: 10px; /* Space from address */
         }
 
-        form input[type="submit"]:hover {
-            background-color: #0056b3;
+        .input-group .copy-button:hover {
+            background-color: #5a5a5a;
         }
-        /* History Card Styles (New) */
+
+        /* History Card Styles */
         .history-cards-container {
             display: flex;
-            flex-direction: column; /* Stack cards vertically */
-            gap: 15px; /* Space between cards */
+            flex-direction: column;
+            gap: 15px;
             margin-top: 20px;
         }
 
         .history-card {
-            background-color: #181c20; /* Lighter background for cards */
-            border: 1px solid #e9ecef;
+            background-color: #181c20;
+            border: 1px solid #2a2a2a; /* Darker border */
             border-radius: 8px;
             padding: 15px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03);
             display: flex;
-            flex-direction: column; /* Stack details inside card */
+            flex-direction: column;
         }
 
         .history-card-header {
@@ -252,13 +252,13 @@
             align-items: center;
             margin-bottom: 10px;
             padding-bottom: 5px;
-            border-bottom: 1px dashed #dee2e6;
+            border-bottom: 1px dashed #4a4a4a; /* Darker dashed border */
         }
 
         .history-card-amount {
             font-size: 1.4em;
             font-weight: bold;
-            color: #f1f7fd;
+            color: #36dae2;
         }
 
         .history-card-status {
@@ -266,12 +266,12 @@
             border-radius: 5px;
             font-weight: bold;
             font-size: 0.9em;
+            color: #1a1a2e; /* Ensure text is dark on colored background */
         }
 
-        .status-pending { background-color: #fff3cd; color: #856404; } /* yellow */
-        .status-approved { background-color: #d4edda; color: #155724; } /* green */
-        .status-rejected { background-color: #f8d7da; color: #721c24; } /* red */
-        .status-completed { background-color: #cfe2ff; color: #073a7d; } /* light blue, for withdrawals */
+        .status-pending { background-color: #ffc107; }
+        .status-approved, .status-completed { background-color: #4CAF50; }
+        .status-rejected { background-color: #f44336; }
 
 
         .history-card-details p {
@@ -290,51 +290,45 @@
             bottom: 0;
             left: 0;
             width: 100%;
-            background-color: #343a40; /* Dark background for nav */
+            background-color: #343a40;
             display: flex;
             justify-content: space-around;
             padding: 10px 0;
             box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-            z-index: 1000; /* Ensure it stays on top */
+            z-index: 1000;
         }
-.auth-message {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: rgba(255, 255, 255, 0.7);
-    color: rgb(7, 4, 4);
-    padding: 10px 20px;
-    border-radius: 5px;
-    font-size: 14px;
-    z-index: 1000;
-    opacity: 0;
-    transition: opacity 0.5s ease-in-out;
-    text-align: center;
-    visibility: hidden; /* Start hidden */
-}
 
-.auth-message.show {
-    opacity: 1; /* Fade in */
-    visibility: visible; /* Make visible */
-}
+        .auth-message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(255, 255, 255, 0.7);
+            color: rgb(7, 4, 4);
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 14px;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+            text-align: center;
+            visibility: hidden;
+        }
 
-.auth-message.success {
-    background-color: rgba(46, 204, 113, 0.85); /* Green for success */
-}
+        .auth-message.show {
+            opacity: 1;
+            visibility: visible;
+        }
 
-.auth-message.error {
-    background-color: rgba(231, 76, 60, 0.85); /* Red for error */
-}
+        .auth-message.success { background-color: rgba(46, 204, 113, 0.85); }
+        .auth-message.error { background-color: rgba(231, 76, 60, 0.85); }
+        .auth-message.info { background-color: rgba(52, 152, 219, 0.85); }
 
-.auth-message.info {
-    background-color: rgba(52, 152, 219, 0.85); /* Blue for info */
-}
         .nav-item {
             display: flex;
             flex-direction: column;
             align-items: center;
-            color: #adb5bd; /* Light grey text */
+            color: #adb5bd;
             text-decoration: none;
             font-size: 0.8em;
             transition: color 0.3s ease;
@@ -346,11 +340,31 @@
         }
 
         .nav-item.active {
-            color: #e92005; /* Active item color */
+            color: #e92005;
         }
 
         .nav-item:hover {
-            color: #e50707; /* White on hover */
+            color: #e50707;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .container {
+                width: 95%;
+                padding: 15px;
+            }
+            .action-buttons {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .btn {
+                width: 100%;
+                margin: 0;
+            }
+            .assets-table th, .assets-table td {
+                padding: 8px 10px;
+                font-size: 0.85em;
+            }
         }
     </style>
     <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
@@ -361,16 +375,15 @@
         <h1>Wallet</h1>
     </header>
 
-    
     <div id="mainWalletView" class="container card">
-        <h2>Your Wallet</h2>
+        <h2>Your Wallet Overview</h2>
         <div class="wallet-info">
-            <p>USD Balance:</p>
-            <div class="balance-display">$<span id="balanceUSD">0.00</span></div>
-            <p>Total Asset:</p> <div class="total-portfolio-value">$<span id="totalPortfolioValue">0.00</span></div> <h3 style="margin-top: 30px;">Your Assets</h3>
-            <div id="assetsList" class="assets-list">
-                <p style="text-align: center;">Loading assets...</p>
-            </div>
+            <p class="balance-label">Total balance</p>
+            <div class="balance-display">$<span id="totalPortfolioValue">0.00</span></div>
+
+            <!-- Re-added "Available USD Balance" section -->
+            <p class="balance-label">Available USD Balance</p>
+            <div class="fiat-balance-display">$<span id="balanceUSD">0.00</span></div>
         </div>
 
         <div class="action-buttons">
@@ -378,31 +391,46 @@
             <button id="withdrawalBtn" class="btn btn-danger">Withdraw</button>
             <button id="historyBtn" class="btn btn-secondary">History</button>
         </div>
+
+        <div class="assets-section">
+            <h3>Your Crypto Assets</h3>
+            <div id="assetsList" class="assets-list-container">
+                <!-- Crypto assets will be dynamically inserted here by JavaScript -->
+            </div>
+            <p id="noAssetsMessage" class="text-center hidden">No crypto assets held.</p>
+        </div>
     </div>
 
     <div id="depositSection" class="container card hidden">
         <button id="backToWalletFromDeposit" class="btn btn-secondary" style="margin-bottom: 20px;">
-            <i class="fas fa-arrow-left"></i>
+            <i class="fas fa-arrow-left"></i> Back
         </button>
         <h2>Deposit Funds</h2>
         <form id="depositForm">
-            <label for="depositCurrency">Currency:</label>
-            <select id="depositCurrency" required>
-                <option value="">Select Currency</option>
-                </select>
+            <div class="input-group">
+                <label for="depositCurrency">Currency:</label>
+                <select id="depositCurrency" required>
+                    <option value="">Select Currency</option>
+                    </select>
+            </div>
 
-            <label for="depositAmount">Amount:</label>
-            <input type="number" id="depositAmount" placeholder="Enter amount" step="0.000001" required>
+            <div class="input-group">
+                <label for="depositAmount">Amount:</label>
+                <input type="number" id="depositAmount" placeholder="Enter amount" step="0.000001" required>
+            </div>
 
-            <p id="addressText" style="text-align: center; margin-top: 20px; word-wrap: break-word;">
-                Please select a cryptocurrency to see the address.
-            </p>
-            <button type="button" id="copyAddressBtn" class="btn btn-primary hidden" style="width: 100%; margin-top: 10px;">
-                <i class="fas fa-copy"></i> Copy Address
-            </button>
+            <div class="input-group">
+                <label>Deposit Address:</label>
+                <div id="addressText" class="address-display">Please select a cryptocurrency to see the address.</div>
+                <button type="button" id="copyAddressBtn" class="copy-button hidden">
+                    <i class="fas fa-copy"></i> Copy Address
+                </button>
+            </div>
 
-            <label for="depositTxId" style="margin-top: 20px;">Transaction ID / Hash:</label>
-            <input type="text" id="depositTxId" placeholder="Enter transaction ID (e.g., from blockchain explorer)">
+            <div class="input-group">
+                <label for="depositTxId" id="depositTxIdLabel">Transaction ID / Hash:</label>
+                <input type="text" id="depositTxId" placeholder="Enter transaction ID (e.g., from blockchain explorer)">
+            </div>
 
             <button type="submit" class="btn btn-primary" style="margin-top: 20px;">Submit Deposit Request</button>
         </form>
@@ -410,20 +438,26 @@
 
     <div id="withdrawalSection" class="container card hidden">
         <button id="backToWalletFromWithdrawal" class="btn btn-secondary" style="margin-bottom: 20px;">
-            <i class="fas fa-arrow-left"></i>
+            <i class="fas fa-arrow-left"></i> Back
         </button>
         <h2>Withdraw Funds</h2>
         <form id="withdrawalForm">
-            <label for="withdrawalCurrency">Currency:</label>
-            <select id="withdrawalCurrency" required>
-                <option value="">Select Currency</option>
-                </select>
+            <div class="input-group">
+                <label for="withdrawalCurrency">Currency:</label>
+                <select id="withdrawalCurrency" required>
+                    <option value="">Select Currency</option>
+                    </select>
+            </div>
 
-            <label for="withdrawalAmount">Amount:</label>
-            <input type="number" id="withdrawalAmount" placeholder="Enter amount" step="0.000001" required>
+            <div class="input-group">
+                <label for="withdrawalAmount">Amount:</label>
+                <input type="number" id="withdrawalAmount" placeholder="Enter amount" step="0.000001" required>
+            </div>
 
-            <label for="withdrawalAddress">Withdrawal Address:</label>
-            <input type="text" id="withdrawalAddress" placeholder="Enter recipient's wallet address" required>
+            <div class="input-group">
+                <label for="withdrawalAddress" id="withdrawalAddressLabel">Withdrawal Address:</label>
+                <input type="text" id="withdrawalAddress" placeholder="Enter recipient's wallet address" required>
+            </div>
 
             <button type="submit" class="btn btn-primary" style="margin-top: 20px;">Submit Withdrawal Request</button>
         </form>
@@ -431,21 +465,21 @@
 
     <div id="historySection" class="container card hidden">
         <button id="backToWalletFromHistory" class="btn btn-secondary" style="margin-bottom: 20px;">
-            <i class="fas fa-arrow-left"></i>
+            <i class="fas fa-arrow-left"></i> Back
         </button>
         <h2>Transaction History</h2>
 
         <h3 style="margin-top: 30px;">Deposit History</h3>
         <div id="depositHistoryContainer" class="history-cards-container">
-            <p style="text-align: center;">Loading deposit history...</p>
+            <p class="text-center">Loading deposit history...</p>
         </div>
 
         <h3 style="margin-top: 30px;">Withdrawal History</h3>
         <div id="withdrawalHistoryContainer" class="history-cards-container">
-            <p style="text-align: center;">Loading withdrawal history...</p>
+            <p class="text-center">Loading withdrawal history...</p>
         </div>
     </div>
- <div id="authMessage" class="auth-message hidden"></div>
+    <div id="authMessage" class="auth-message hidden"></div>
 
     <div class="bottom-nav">
         <a href="index.html" class="nav-item">

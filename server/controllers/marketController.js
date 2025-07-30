@@ -1,4 +1,4 @@
-// server/controllers/marketController.js
+/*// server/controllers/marketController.js
 const { fetchMarketPrices } = require("../services/marketService");
 
 exports.getMarketData = async (req, res) => {
@@ -8,4 +8,4 @@ exports.getMarketData = async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: "Failed to fetch market data" });
   }
-};
+};*/

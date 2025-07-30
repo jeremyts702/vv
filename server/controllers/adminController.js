@@ -3,14 +3,62 @@ const User = require('../models/User');
 const Withdrawal = require('../models/Withdrawal');
 const Deposit = require('../models/Deposit');
 const Order = require('../models/Order');
+const marketService = require('../services/marketService'); // Import marketService to get crypto prices
 
-// --- Functions from getUsers to rejectWithdrawal remain the same ---
+/**
+ * Helper function to calculate the total portfolio value in USD for a user.
+ * This logic is similar to what's in walletController.js but adapted for admin view.
+ * @param {Object} user - The user object from the database.
+ * @param {Map<string, number>} cryptoPrices - Map of cryptocurrency symbols to their current USD prices.
+ * @returns {number} The total portfolio value in USD.
+ */
+function calculateUserTotalPortfolioValue(user, cryptoPrices) {
+    let totalValue = user.balance || 0; // Start with fiat USD balance
+
+    // Ensure user.assets is a Map or convert it if it's a plain object from Mongoose
+    // Mongoose Maps might be returned as plain objects when .toObject() is called,
+    // so this ensures it's iterable as a Map.
+    const userAssets = user.assets instanceof Map ? user.assets : new Map(Object.entries(user.assets || {}));
+
+    for (const [coinSymbol, amount] of userAssets.entries()) {
+        const normalizedSymbol = coinSymbol.toUpperCase();
+        const currentPrice = cryptoPrices.get(normalizedSymbol);
+
+        if (currentPrice !== undefined) {
+            totalValue += amount * currentPrice;
+        } else if (normalizedSymbol === 'USDT') {
+            totalValue += amount * 1.0; // USDT is always 1 USD
+        } else {
+            console.warn(`Admin: Price for asset symbol '${normalizedSymbol}' not found for user ${user._id}.`);
+        }
+    }
+    return totalValue;
+}
 
 // Get all users (for admin dashboard)
 exports.getUsers = async (req, res) => {
     try {
-        const users = await User.find().select('-password');
-        res.status(200).json(users);
+        const users = await User.find().select('-password'); // Exclude passwords
+
+        // Fetch current market prices once for all users
+        const marketData = await marketService.fetchMarketPrices();
+        const cryptoPrices = new Map();
+        marketData.forEach(coin => {
+            cryptoPrices.set(coin.symbol.toUpperCase(), coin.current_price);
+        });
+        // Ensure USDT is explicitly set to 1 USD if not already in market data
+        if (!cryptoPrices.has('USDT')) {
+            cryptoPrices.set('USDT', 1);
+        }
+
+        // Process each user to calculate their total portfolio value
+        const usersWithPortfolioValue = users.map(user => {
+            const userObject = user.toObject(); // Convert Mongoose document to plain object
+            userObject.totalPortfolioValueUSD = calculateUserTotalPortfolioValue(userObject, cryptoPrices);
+            return userObject;
+        });
+
+        res.status(200).json(usersWithPortfolioValue);
     } catch (error) {
         console.error('Error fetching users:', error);
         res.status(500).json({ message: 'Server error fetching users.' });
@@ -156,7 +204,9 @@ exports.rejectWithdrawal = async (req, res) => {
 
         const user = await User.findById(withdrawal.userId);
         if (user) {
-            user.balance += withdrawal.amount;
+            // Note: Assuming withdrawal.amount is in USD or the base currency
+            // If it's a crypto withdrawal, you'd need to refund the specific crypto asset
+            user.balance = (user.balance || 0) + withdrawal.amount; // Refund to main USD balance
             await user.save();
         } else {
             console.warn(`User with ID ${withdrawal.userId} not found for withdrawal ${withdrawal._id}. Funds not refunded automatically.`);

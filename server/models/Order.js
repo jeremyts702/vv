@@ -22,7 +22,7 @@ const OrderSchema = new mongoose.Schema({
     },
     tradeType: {
         type: String, // 'buy' or 'sell'
-        enum: ['buy', 'sell'],
+        enum: ['buy', 'sell', 'instant_swap'],
         required: true
     },
     tradeValueUSD: {

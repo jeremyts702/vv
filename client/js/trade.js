@@ -85,7 +85,7 @@ const CURATED_BINANCE_SYMBOLS = [
     "BTC", "ETH", "LTC", "BNB", "TRX", "EOS", "DOGE", "BCH", "APT", "OP",
     "LDO", "ADA", "DOT", "ATOM", "LINK", "IMX", "FIL", "MANA", "XRP", "XLM",
     "VET", "UNI", "SOL", "SHIB", "SAND", "NEAR", "AAVE", "GRT", 
-    "ENS", "DYDX", "AXS", "AVAX", "TRUMP", "USDT" // USDT is always included for fiat-like conversions
+    "ENS", "DYDX", "AXS", "AVAX", "TRUMP", "USDT","ICP", "ETC", "MKR", "COMP", "SNX", "FTM", "ZEC", "ENJ", "CHZ", "INJ", "RNDR", "SUI", "GALA", "ARBCH", "FLOKI", "PEPE", "WIF" // USDT is always included for fiat-like conversions
 ];
 
 

@@ -3,7 +3,7 @@
 document.addEventListener('DOMContentLoaded', async () => {
     const BASE_URL = 'http://localhost:5000'; // Make sure this matches your backend URL
     // Retrieve the token and user ID/role (if needed for admin context)
-    const token = localStorage.getItem('token'); 
+    const token = localStorage.getItem('token');
     const userId = localStorage.getItem('userId'); // Assuming you store userId for admin too
 
     // Initialize Socket.IO connection with the token
@@ -202,15 +202,17 @@ document.addEventListener('DOMContentLoaded', async () => {
             6, // Number of columns in the user table
             (user) => {
                 const userDisplay = user.email || user.username || user._id;
+                // Display totalPortfolioValueUSD if available, otherwise fallback to balance, then 0
+                const displayBalance = typeof user.totalPortfolioValueUSD === 'number' ? user.totalPortfolioValueUSD : (typeof user.balance === 'number' ? user.balance : 0);
                 return `
                     <td>${user._id}</td>
                     <td>${userDisplay}</td>
                     <td>${user.role}</td>
-                    <td>$${user.balance.toFixed(2)}</td>
+                    <td>$${displayBalance.toFixed(2)}</td>
                     <td>${formatDateTime(user.createdAt)}</td>
                     <td>
                         <div class="button-group">
-                            <button class="action-button btn-edit-balance" data-user-id="${user._id}" data-user-email="${userDisplay}" data-user-balance="${user.balance}">Edit Balance</button>
+                            <button class="action-button btn-edit-balance" data-user-id="${user._id}" data-user-email="${userDisplay}" data-user-balance="${user.balance || 0}">Edit Balance</button>
                             <button class="action-button delete-user" data-user-id="${user._id}">Delete</button>
                         </div>
                     </td>
@@ -228,10 +230,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             8, // Number of columns
             (deposit) => {
                 const userDisplay = deposit.userId ? (deposit.userId.email || deposit.userId.username || deposit.userId._id) : 'N/A';
+                // Fix: Ensure deposit.amount is a number before calling toFixed()
+                const depositAmount = typeof deposit.amount === 'number' ? deposit.amount : 0;
                 return `
                     <td>${deposit._id}</td>
                     <td>${userDisplay}</td>
-                    <td>$${deposit.amount.toFixed(2)}</td>
+                    <td>$${depositAmount.toFixed(2)}</td>
                     <td>${deposit.currency}</td>
                     <td>${deposit.transactionId}</td>
                     <td>${deposit.status}</td>
@@ -256,10 +260,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             8, // Number of columns
             (withdrawal) => {
                 const userDisplay = withdrawal.userId ? (withdrawal.userId.email || withdrawal.userId.username || withdrawal.userId._id) : 'N/A';
+                // Fix: Ensure withdrawal.amount is a number before calling toFixed()
+                const withdrawalAmount = typeof withdrawal.amount === 'number' ? withdrawal.amount : 0;
                 return `
                     <td>${withdrawal._id}</td>
                     <td>${userDisplay}</td>
-                    <td>$${withdrawal.amount.toFixed(2)}</td>
+                    <td>$${withdrawalAmount.toFixed(2)}</td>
                     <td>${withdrawal.currency}</td>
                     <td>${withdrawal.address}</td>
                     <td>${withdrawal.status}</td>
@@ -284,14 +290,19 @@ document.addEventListener('DOMContentLoaded', async () => {
             10, // Number of columns
             (order) => {
                 const userIdDisplay = order.userId ? (order.userId.email || order.userId.username || order.userId._id) : 'N/A';
+                // Fix: Ensure order.amount, order.priceUSD, order.tradeValueUSD are numbers
+                const orderAmount = typeof order.amount === 'number' ? order.amount : 0;
+                const orderPriceUSD = typeof order.priceUSD === 'number' ? order.priceUSD : 0;
+                const orderTradeValueUSD = typeof order.tradeValueUSD === 'number' ? order.tradeValueUSD : 0;
+
                 return `
                     <td>${order._id}</td>
                     <td>${userIdDisplay}</td>
                     <td>${order.tradeType}</td>
                     <td>${order.coinId}</td>
-                    <td>${order.amount.toFixed(8)}</td>
-                    <td>$${order.priceUSD.toFixed(2)}</td>
-                    <td>$${order.tradeValueUSD.toFixed(2)}</td>
+                    <td>${orderAmount.toFixed(8)}</td>
+                    <td>$${orderPriceUSD.toFixed(2)}</td>
+                    <td>$${orderTradeValueUSD.toFixed(2)}</td>
                     <td>${order.status}</td>
                     <td>${formatDateTime(order.createdAt)}</td>
                     <td>
@@ -313,11 +324,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (e.target.classList.contains('btn-edit-balance')) {
             const userId = e.target.dataset.userId;
             const userEmail = e.target.dataset.userEmail;
-            const userBalance = e.target.dataset.userBalance;
+            const userBalance = e.target.dataset.userBalance; // This will already be a number or '0' due to the fix in fetchUsers
 
             editUserIdInput.value = userId;
             editUserEmailPhone.textContent = userEmail;
-            editUserCurrentBalance.textContent = parseFloat(userBalance).toFixed(2);
+            editUserCurrentBalance.textContent = parseFloat(userBalance).toFixed(2); // Ensure it's parsed just in case
             balanceAmountInput.value = ''; // Clear previous amount
             balanceTypeSelect.value = 'add'; // Default to add
             editBalanceModal.style.display = 'flex'; // Use flex for centering
