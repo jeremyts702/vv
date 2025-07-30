@@ -127,7 +127,7 @@ document.addEventListener('DOMContentLoaded', () => {
             authData.phoneNumber = iti.getNumber(); // Use iti.getNumber() for international phone number
         }
 
-        const BASE_URL = 'http://localhost:5000'; // Define your backend base URL
+        const BASE_URL = 'https://vv-ncd0.onrender.com'; // Define your backend base URL
 
         if (isLoginMode) {
             endpoint = `${BASE_URL}/api/auth/login`; 
