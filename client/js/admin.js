@@ -1,7 +1,7 @@
 // public/js/admin.js
 
 document.addEventListener('DOMContentLoaded', async () => {
-    const BASE_URL = 'http://localhost:5000'; // Make sure this matches your backend URL
+    const BASE_URL = 'https://vv-ncd0.onrender.com'; // Make sure this matches your backend URL
     // Retrieve the token and user ID/role (if needed for admin context)
     const token = localStorage.getItem('token');
     const userId = localStorage.getItem('userId'); // Assuming you store userId for admin too
